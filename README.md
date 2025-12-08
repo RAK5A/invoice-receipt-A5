@@ -10,3 +10,4 @@
 7. npm i
 8. config username, password, database name in .env
 9. php artisan migrate
+10. idk loss track
