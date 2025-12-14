@@ -2,17 +2,44 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Invoice extends Model
 {
-    protected $guarded = []; // Allows mass assignment
+    use HasFactory;
 
-    public function customer() {
-        return $this->belongsTo(Customer::class);
+    protected $fillable = [
+        'invoice',
+        'custom_email',
+        'invoice_date',
+        'invoice_due_date',
+        'subtotal',
+        'shipping',
+        'discount',
+        'vat',
+        'total',
+        'notes',
+        'invoice_type',
+        'status',
+    ];
+
+    protected $casts = [
+        'subtotal' => 'decimal:2',
+        'shipping' => 'decimal:2',
+        'discount' => 'decimal:2',
+        'vat' => 'decimal:2',
+        'total' => 'decimal:2',
+    ];
+
+    // Relationships
+    public function customer()
+    {
+        return $this->hasOne(Customer::class, 'invoice', 'invoice');
     }
 
-    public function items() {
-        return $this->hasMany(InvoiceItem::class);
+    public function items()
+    {
+        return $this->hasMany(InvoiceItem::class, 'invoice', 'invoice');
     }
 }

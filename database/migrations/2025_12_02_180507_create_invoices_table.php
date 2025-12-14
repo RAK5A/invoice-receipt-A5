@@ -13,14 +13,18 @@ return new class extends Migration
     {
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('customer_id')->constrained()->onDelete('cascade');
-            $table->date('invoice_date');
-            $table->date('due_date');
-            $table->string('status')->default('Open'); // Open, Paid
-            $table->decimal('subtotal', 10, 2);
-            $table->decimal('tax', 10, 2)->default(0);
+            $table->string('invoice')->unique();
+            $table->text('custom_email')->nullable();
+            $table->string('invoice_date');
+            $table->string('invoice_due_date');
+            $table->decimal('subtotal', 10, 2)->default(0);
+            $table->decimal('shipping', 10, 2)->default(0);
             $table->decimal('discount', 10, 2)->default(0);
-            $table->decimal('total', 10, 2);
+            $table->decimal('vat', 10, 2)->default(0);
+            $table->decimal('total', 10, 2)->default(0);
+            $table->text('notes')->nullable();
+            $table->enum('invoice_type', ['invoice', 'quote', 'receipt'])->default('invoice');
+            $table->enum('status', ['open', 'paid'])->default('open');
             $table->timestamps();
         });
     }

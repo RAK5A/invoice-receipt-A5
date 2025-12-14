@@ -1,10 +1,10 @@
-<x-layout title="Add Customer - Invoice System">
+<x-layout title="Edit Customer - Invoice System">
     <div class="page-container">
         <!-- Page Header -->
         <div class="page-header">
             <div>
-                <h1>Add New Customer</h1>
-                <p>Create a new customer record</p>
+                <h1>Edit Customer</h1>
+                <p>Update customer information</p>
             </div>
             <a href="{{ route('customers.index') }}" class="btn-secondary">
                 <span class="material-symbols-rounded">arrow_back</span>
@@ -14,8 +14,9 @@
 
         <!-- Form Card -->
         <div class="form-card">
-            <form action="{{ route('customers.store') }}" method="POST">
+            <form action="{{ route('customers.update', $customer->id) }}" method="POST">
                 @csrf
+                @method('PUT')
 
                 <!-- Billing Information Section -->
                 <div class="section-header-form">
@@ -32,8 +33,8 @@
                             <span class="required">*</span>
                         </label>
                         <input type="text" id="name" name="name"
-                            class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" required
-                            placeholder="Enter customer name">
+                            class="form-control @error('name') is-invalid @enderror"
+                            value="{{ old('name', $customer->name) }}" required placeholder="Enter customer name">
                         @error('name')
                             <span class="error-message">{{ $message }}</span>
                         @enderror
@@ -47,8 +48,8 @@
                             <span class="required">*</span>
                         </label>
                         <input type="email" id="email" name="email"
-                            class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}"
-                            required placeholder="customer@example.com">
+                            class="form-control @error('email') is-invalid @enderror"
+                            value="{{ old('email', $customer->email) }}" required placeholder="customer@example.com">
                         @error('email')
                             <span class="error-message">{{ $message }}</span>
                         @enderror
@@ -62,8 +63,8 @@
                             <span class="required">*</span>
                         </label>
                         <input type="tel" id="phone" name="phone"
-                            class="form-control @error('phone') is-invalid @enderror" value="{{ old('phone') }}"
-                            required placeholder="Enter phone number">
+                            class="form-control @error('phone') is-invalid @enderror"
+                            value="{{ old('phone', $customer->phone) }}" required placeholder="Enter phone number">
                         @error('phone')
                             <span class="error-message">{{ $message }}</span>
                         @enderror
@@ -77,8 +78,8 @@
                             <span class="required">*</span>
                         </label>
                         <input type="text" id="county" name="county"
-                            class="form-control @error('county') is-invalid @enderror" value="{{ old('county') }}"
-                            required placeholder="Enter country">
+                            class="form-control @error('county') is-invalid @enderror"
+                            value="{{ old('county', $customer->county) }}" required placeholder="Enter country">
                         @error('county')
                             <span class="error-message">{{ $message }}</span>
                         @enderror
@@ -92,8 +93,8 @@
                             <span class="required">*</span>
                         </label>
                         <input type="text" id="address_1" name="address_1"
-                            class="form-control @error('address_1') is-invalid @enderror" value="{{ old('address_1') }}"
-                            required placeholder="Street address">
+                            class="form-control @error('address_1') is-invalid @enderror"
+                            value="{{ old('address_1', $customer->address_1) }}" required placeholder="Street address">
                         @error('address_1')
                             <span class="error-message">{{ $message }}</span>
                         @enderror
@@ -106,7 +107,8 @@
                             Address Line 2
                         </label>
                         <input type="text" id="address_2" name="address_2"
-                            class="form-control @error('address_2') is-invalid @enderror" value="{{ old('address_2') }}"
+                            class="form-control @error('address_2') is-invalid @enderror"
+                            value="{{ old('address_2', $customer->address_2) }}"
                             placeholder="Apartment, suite, etc. (optional)">
                         @error('address_2')
                             <span class="error-message">{{ $message }}</span>
@@ -121,8 +123,8 @@
                             <span class="required">*</span>
                         </label>
                         <input type="text" id="town" name="town"
-                            class="form-control @error('town') is-invalid @enderror" value="{{ old('town') }}" required
-                            placeholder="Enter town/city">
+                            class="form-control @error('town') is-invalid @enderror"
+                            value="{{ old('town', $customer->town) }}" required placeholder="Enter town/city">
                         @error('town')
                             <span class="error-message">{{ $message }}</span>
                         @enderror
@@ -136,8 +138,8 @@
                             <span class="required">*</span>
                         </label>
                         <input type="text" id="postcode" name="postcode"
-                            class="form-control @error('postcode') is-invalid @enderror" value="{{ old('postcode') }}"
-                            required placeholder="Enter postcode">
+                            class="form-control @error('postcode') is-invalid @enderror"
+                            value="{{ old('postcode', $customer->postcode) }}" required placeholder="Enter postcode">
                         @error('postcode')
                             <span class="error-message">{{ $message }}</span>
                         @enderror
@@ -159,8 +161,9 @@
                             <span class="required">*</span>
                         </label>
                         <input type="text" id="name_ship" name="name_ship"
-                            class="form-control @error('name_ship') is-invalid @enderror" value="{{ old('name_ship') }}"
-                            required placeholder="Enter recipient name">
+                            class="form-control @error('name_ship') is-invalid @enderror"
+                            value="{{ old('name_ship', $customer->name_ship) }}" required
+                            placeholder="Enter recipient name">
                         @error('name_ship')
                             <span class="error-message">{{ $message }}</span>
                         @enderror
@@ -175,7 +178,8 @@
                         </label>
                         <input type="text" id="county_ship" name="county_ship"
                             class="form-control @error('county_ship') is-invalid @enderror"
-                            value="{{ old('county_ship') }}" required placeholder="Enter country">
+                            value="{{ old('county_ship', $customer->county_ship) }}" required
+                            placeholder="Enter country">
                         @error('county_ship')
                             <span class="error-message">{{ $message }}</span>
                         @enderror
@@ -190,7 +194,8 @@
                         </label>
                         <input type="text" id="address_1_ship" name="address_1_ship"
                             class="form-control @error('address_1_ship') is-invalid @enderror"
-                            value="{{ old('address_1_ship') }}" required placeholder="Street address">
+                            value="{{ old('address_1_ship', $customer->address_1_ship) }}" required
+                            placeholder="Street address">
                         @error('address_1_ship')
                             <span class="error-message">{{ $message }}</span>
                         @enderror
@@ -204,12 +209,12 @@
                         </label>
                         <input type="text" id="address_2_ship" name="address_2_ship"
                             class="form-control @error('address_2_ship') is-invalid @enderror"
-                            value="{{ old('address_2_ship') }}" placeholder="Apartment, suite, etc. (optional)">
+                            value="{{ old('address_2_ship', $customer->address_2_ship) }}"
+                            placeholder="Apartment, suite, etc. (optional)">
                         @error('address_2_ship')
                             <span class="error-message">{{ $message }}</span>
                         @enderror
                     </div>
-
                     <!-- Town Ship -->
                     <div class="form-group">
                         <label for="town_ship">
@@ -218,13 +223,12 @@
                             <span class="required">*</span>
                         </label>
                         <input type="text" id="town_ship" name="town_ship"
-                            class="form-control @error('town_ship') is-invalid @enderror" value="{{ old('town_ship') }}"
-                            required placeholder="Enter town/city">
+                            class="form-control @error('town_ship') is-invalid @enderror"
+                            value="{{ old('town_ship', $customer->town_ship) }}" required placeholder="Enter town/city">
                         @error('town_ship')
                             <span class="error-message">{{ $message }}</span>
                         @enderror
                     </div>
-
                     <!-- Postcode Ship -->
                     <div class="form-group">
                         <label for="postcode_ship">
@@ -234,22 +238,10 @@
                         </label>
                         <input type="text" id="postcode_ship" name="postcode_ship"
                             class="form-control @error('postcode_ship') is-invalid @enderror"
-                            value="{{ old('postcode_ship') }}" required placeholder="Enter postcode">
+                            value="{{ old('postcode_ship', $customer->postcode_ship) }}" required
+                            placeholder="Enter postcode">
                         @error('postcode_ship')
                             <span class="error-message">{{ $message }}</span>
                         @enderror
                     </div>
                 </div>
-
-                <!-- Form Actions -->
-                <div class="form-actions">
-                    <a href="{{ route('customers.index') }}" class="btn-cancel">Cancel</a>
-                    <button type="submit" class="btn-submit">
-                        <span class="material-symbols-rounded">save</span>
-                        Create Customer
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</x-layout>

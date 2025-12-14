@@ -11,21 +11,13 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('invoice_items', function (Blueprint $table) {
-            /* $table->id();
-            $table->foreignId('invoice_id')->constrained()->onDelete('cascade');
-            $table->foreignId('product_id')->nullable()->constrained(); // Nullable if custom item
-            $table->string('item_name');
-            $table->integer('quantity');
-            $table->decimal('price', 10, 2);
-            $table->decimal('total', 10, 2);
-            $table->timestamps(); */
-
             $table->id();
-            $table->foreignId('invoice_id')->constrained()->onDelete('cascade');
-            $table->string('product_name');
-            $table->integer('quantity');
+            $table->string('invoice');
+            $table->text('product');
+            $table->integer('qty');
             $table->decimal('price', 10, 2);
-            $table->decimal('total', 10, 2); // quantity * price
+            $table->string('discount')->nullable();
+            $table->decimal('subtotal', 10, 2);
             $table->timestamps();
         });
     }
