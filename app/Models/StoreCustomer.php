@@ -5,12 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Customer extends Model
+class StoreCustomer extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'invoice',
         'name',
         'email',
         'address_1',
@@ -26,10 +25,4 @@ class Customer extends Model
         'county_ship',
         'postcode_ship',
     ];
-
-    // Relationships
-    public function invoice()
-    {
-        return $this->belongsTo(Invoice::class, 'invoice', 'invoice');
-    }
 }

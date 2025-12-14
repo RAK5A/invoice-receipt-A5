@@ -1,14 +1,14 @@
-<x-layout title="Customers - Invoice System">
+<x-layout title="Products - Invoice System">
     <div class="page-container">
         <!-- Page Header -->
         <div class="page-header">
             <div>
-                <h1>Customers</h1>
-                <p>Manage your customer database</p>
+                <h1>Products</h1>
+                <p>Manage your product inventory</p>
             </div>
-            <a href="{{ route('customers.create') }}" class="btn-primary">
-                <span class="material-symbols-rounded">person_add</span>
-                Add Customer
+            <a href="{{ route('products.create') }}" class="btn-primary">
+                <span class="material-symbols-rounded">add</span>
+                Add Product
             </a>
         </div>
 
@@ -25,53 +25,46 @@
             </div>
         @endif
 
-        <!-- Customers Table -->
+        <!-- Products Table -->
         <div class="card">
             <div class="card-header">
-                <h2>All Customers</h2>
+                <h2>All Products</h2>
                 <div class="search-box">
                     <span class="material-symbols-rounded">search</span>
-                    <input type="text" id="searchInput" placeholder="Search customers..." onkeyup="searchTable()">
+                    <input type="text" id="searchInput" placeholder="Search products..." onkeyup="searchTable()">
                 </div>
             </div>
 
             <div class="table-responsive">
-                @if($customers->count() > 0)
-                    <table class="data-table" id="customersTable">
+                @if($products->count() > 0)
+                    <table class="data-table" id="productsTable">
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Phone</th>
-                                <th>Location</th>
+                                <th>Product Name</th>
+                                <th>Description</th>
+                                <th>Price</th>
                                 <th>Created</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($customers as $customer)
+                            @foreach($products as $product)
                                 <tr>
-                                    <td><strong>#{{ $customer->id }}</strong></td>
-                                    <td>
-                                        <div class="customer-info">
-                                            <span class="customer-avatar">{{ strtoupper(substr($customer->name, 0, 2)) }}</span>
-                                            <strong>{{ $customer->name }}</strong>
-                                        </div>
-                                    </td>
-                                    <td>{{ $customer->email }}</td>
-                                    <td>{{ $customer->phone }}</td>
-                                    <td>{{ $customer->town }}, {{ $customer->county }}</td>
-                                    <td>{{ $customer->created_at->format('M d, Y') }}</td>
+                                    <td><strong>#{{ $product->product_id }}</strong></td>
+                                    <td>{{ $product->product_name }}</td>
+                                    <td>{{ Str::limit($product->product_desc, 50) }}</td>
+                                    <td><strong>${{ number_format($product->product_price, 2) }}</strong></td>
+                                    <td>{{ $product->created_at->format('M d, Y') }}</td>
                                     <td>
                                         <div class="action-buttons">
-                                            <a href="{{ route('customers.edit', $customer->id) }}" class="action-btn edit"
+                                            <a href="{{ route('products.edit', $product->product_id) }}" class="action-btn edit"
                                                 title="Edit">
                                                 <span class="material-symbols-rounded">edit</span>
                                             </a>
-                                            <form action="{{ route('customers.destroy', $customer->id) }}" method="POST"
+                                            <form action="{{ route('products.destroy', $product->product_id) }}" method="POST"
                                                 class="delete-form"
-                                                onsubmit="return confirm('Are you sure you want to delete this customer?')">
+                                                onsubmit="return confirm('Are you sure you want to delete this product?')">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="action-btn delete" title="Delete">
@@ -87,13 +80,13 @@
 
                     <!-- Pagination -->
                     <div class="pagination-wrapper">
-                        {{ $customers->links() }}
+                        {{ $products->links() }}
                     </div>
                 @else
                     <div class="empty-state">
-                        <span class="material-symbols-rounded">people</span>
-                        <p>No customers found. Add your first customer!</p>
-                        <a href="{{ route('customers.create') }}" class="btn-primary">Add Customer</a>
+                        <span class="material-symbols-rounded">inventory_2</span>
+                        <p>No products found. Add your first product!</p>
+                        <a href="{{ route('products.create') }}" class="btn-primary">Add Product</a>
                     </div>
                 @endif
             </div>
@@ -105,7 +98,7 @@
         function searchTable() {
             const input = document.getElementById('searchInput');
             const filter = input.value.toUpperCase();
-            const table = document.getElementById('customersTable');
+            const table = document.getElementById('productsTable');
             const tr = table.getElementsByTagName('tr');
 
             for (let i = 1; i < tr.length; i++) {
