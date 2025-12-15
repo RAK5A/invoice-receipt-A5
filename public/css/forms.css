@@ -397,6 +397,116 @@ textarea.form-control {
     justify-content: center;
 }
 
+/* Section Header for Forms */
+.section-header-form {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.section-header-form .material-symbols-rounded {
+    font-size: 1.75rem;
+    color: #3b82f6;
+}
+
+.section-header-form h3 {
+    color: #151A2D;
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* Customer Avatar in Table */
+.customer-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.customer-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.875rem;
+}
+
+/* User Avatar in Table */
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.875rem;
+    flex-shrink: 0;
+}
+
+/* Badge "You" */
+.badge-you {
+    display: inline-block;
+    padding: 2px 8px;
+    background: #dbeafe;
+    color: #3b82f6;
+    font-size: 0.7rem;
+    font-weight: 600;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-left: 8px;
+}
+
+/* Alert Danger */
+.alert-danger {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    background: #fee2e2;
+    border: 1px solid #fecaca;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    position: relative;
+}
+
+.alert-danger .material-symbols-rounded {
+    color: #ef4444;
+    font-size: 1.5rem;
+}
+
+.alert-danger p {
+    color: #991b1b;
+    font-size: 0.95rem;
+    margin: 0;
+    flex: 1;
+}
+
+/* Form Hint */
+.form-hint {
+    color: #64748b;
+    font-size: 0.8rem;
+    margin-top: 4px;
+    display: block;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .page-header {
