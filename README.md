@@ -7,7 +7,7 @@
 4. select -> mysql
 5. select -> no
 6. select -> no
-7. npm i
+7. ```npm i``` and ```npm run dev```
 8. config username, password, database name in .env
 9. ```php artisan migrate```
 10. ```php artisan db:seed``` (seed data into database)
