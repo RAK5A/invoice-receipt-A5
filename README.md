@@ -12,15 +12,15 @@
 9. ```php artisan migrate```
 10. ```php artisan db:seed``` (seed data into database)
 11. setup Fortify:
-    > ```composer require laravel/fortify```
+    ```composer require laravel/fortify```
     - after that enter this command:
-    > ```php artisan fortify:install```
+    ```php artisan fortify:install```
     - and migrate again:
-    > ```php artisan migrate```
+    ```php artisan migrate```
     or
-    > ```php artisan migrate:fresh --seeder``` (migrate and seed data at the same time)
+    ```php artisan migrate:fresh --seeder``` (migrate and seed data at the same time)
 
 12. setup Dompdf (for downloading the pdf):
-    > ```composer require barryvdh/laravel-dompdf```
+    ```composer require barryvdh/laravel-dompdf```
 13. run:
-    > ```php artisan serve```
+    ```php artisan serve```
