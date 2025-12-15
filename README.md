@@ -11,7 +11,7 @@
 8. config username, password, database name in .env
 9. ```php artisan migrate```
 10. ```php artisan db:seed``` (seed data into database)
-11. setup Fortify:
+11. - setup Fortify:
     ```composer require laravel/fortify```
     - after that enter this command:
     ```php artisan fortify:install```
@@ -20,7 +20,7 @@
     or
     ```php artisan migrate:fresh --seeder``` (migrate and seed data at the same time)
 
-12. setup Dompdf (for downloading the pdf):
+12. - setup Dompdf (for downloading the pdf):
     ```composer require barryvdh/laravel-dompdf```
-13. run:
+13. - run:
     ```php artisan serve```
