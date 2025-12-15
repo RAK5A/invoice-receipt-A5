@@ -13,6 +13,84 @@ body {
   background: linear-gradient(#F1F3FF, #CBD4FF);
 }
 
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  transition: gap 0.4s ease;
+}
+
+.logo-badge {
+  min-width: 46px;
+  height: 46px;
+  background: linear-gradient(135deg, #EEF2FF 0%, #CBD4FF 100%);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.4s ease;
+}
+
+.logo-badge .material-symbols-rounded {
+  font-size: 22px;
+  color: #151A2D;
+  font-weight: 600;
+}
+
+.logo-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.logo-text {
+  display: flex;
+  gap: 4px;
+  align-items: baseline;
+}
+
+.logo-primary {
+  font-size: 17px;
+  font-weight: 700;
+  color: #EEF2FF;
+  white-space: nowrap;
+}
+
+.logo-secondary {
+  font-size: 17px;
+  font-weight: 700;
+  color: #CBD4FF;
+  white-space: nowrap;
+}
+
+.logo-content p {
+  margin: 0;
+  font-size: 11px;
+  color: rgba(238, 242, 255, 0.7);
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+
+.sidebar.collapsed .header-logo {
+  gap: 0;
+  justify-content: center;
+}
+
+.sidebar.collapsed .logo-badge {
+  margin: 0 auto;
+}
+
+.sidebar.collapsed .logo-content {
+  width: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
 .sidebar {
   position: fixed;
   top: 0;
@@ -141,7 +219,7 @@ body {
   position: absolute;
   bottom: 35px;
   width: 100%;
-  background: #151A2D;
+  background: #151A2D;  
 }
 
 .sidebar-nav .nav-item {
@@ -247,5 +325,14 @@ body {
 
   .sidebar.collapsed .sidebar-nav .primary-nav {
     transform: translateY(15px);
+  }
+
+  .main-content {
+    margin-left: 0;
+    padding: 80px 20px 20px;
+  }
+
+  .sidebar.collapsed~.main-content {
+    margin-left: 0;
   }
 }

@@ -4,7 +4,7 @@
         <div class="dashboard-header">
             <h1>Dashboard</h1>
             {{-- <p>Welcome back, {{ Auth::user()->name }}! Here's what's happening with your invoices today.</p> --}}
-            <p>Welcome back, ! Here's what's happening with your invoices today.</p>
+            <p>Welcome back, {{ auth()->user()->username}}! Here's what's happening with your invoices today.</p>
         </div>
 
         <!-- Stats Grid -->
