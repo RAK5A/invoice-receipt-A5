@@ -13,6 +13,11 @@ use Illuminate\Support\Facades\Route;
 //     return view('welcome');
 // });
 
+// Product route model binding
+Route::bind('product', function ($value) {
+    return \App\Models\Product::where('product_id', $value)->firstOrFail();
+});
+
 Route::get('/', function () {
     return redirect()->route('login');
 });
@@ -24,11 +29,6 @@ Route::get('/login',function(){
 Route::get('/register',function(){
     return view('auth.register');  
 })->name('register');
-
-// Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-/* Route::get('/home', [HomeController::class, 'index'])->name('home');
-Route::get('/profile', [AuthController::class, 'profile'])->name('profile');
-Route::post('/change-password', action: [AuthController::class, 'changePassword'])->name('change-password'); */
 
 // Protected Routes
 Route::middleware(['auth'])->group(function () {
