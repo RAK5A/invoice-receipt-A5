@@ -10,4 +10,13 @@
 7. npm i
 8. config username, password, database name in .env
 9. php artisan migrate
-10. Testing
+
+> setup Fortify:
+    ```composer require laravel/fortify```
+    - after that enter this command:
+    ```php artisan fortify:install```
+    - and migrate again:
+    ```php artisan migrate```
+
+> setup Dompdf (for downloading the pdf):
+    ```composer require barryvdh/laravel-dompdf```
