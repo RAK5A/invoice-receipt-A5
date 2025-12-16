@@ -21,9 +21,12 @@
     @if($navbar)
         <x-navbar />
     @endif
-    {{ $slot }}
+    <main class="main-content">
+        {{ $slot }}
+    </main>
 
     <script src="{{ asset('js/sidebar.js') }}"></script>
+    {{-- <script src="{{ asset('js/search.js') }}"></script> --}}
 </body>
 
 </html>
