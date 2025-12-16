@@ -209,29 +209,6 @@
                             <!-- Initial row -->
                             <tr class="item-row">
                                 <td>
-                                    <input type="text" name="product_name[]" class="form-control"
-                                        placeholder="Item name" required>
-                                </td>
-                                <td>
-                                    <input type="number" name="quantity[]" class="form-control qty" value="1" min="1"
-                                        required>
-                                </td>
-                                <td>
-                                    <input type="number" step="0.01" name="price[]" class="form-control price"
-                                        value="0.00" required>
-                                </td>
-                                <td>
-                                    <input type="number" step="0.01" name="discount[]" class="form-control discount"
-                                        value="0.00" required>
-                                </td>
-                                <td>
-                                    <input type="number" step="0.01" class="form-control subtotal" value="0.00"
-                                        readonly>
-                                </td>
-                                <td class="text-center">
-                                    <button type="button" class="btn-link text-red-500 remove-row">x</button>
-                                </td>
-                                <td>
                                     <input type="text" name="products[0][name]" class="form-control item-name"
                                         placeholder="Product name" required>
                                 </td>
@@ -364,6 +341,4 @@
             </div>
         </div>
     </div>
-
-    <script src="{{ asset('js/invoice.js') }}"></script>
 </x-layout>

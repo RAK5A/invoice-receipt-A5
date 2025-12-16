@@ -27,5 +27,7 @@
 
 13. - setup Dompdf (for downloading the pdf):
     ```composer require barryvdh/laravel-dompdf```
+    - after that run:
+    ```php artisan vendor:publish --provider="Barryvdh\DomPDF\ServiceProvider"```
 1. - run:
     ```php artisan serve```
