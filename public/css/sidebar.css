@@ -1,11 +1,12 @@
-.main-content {
+body:has(.sidebar) .main-content {
   margin-left: 270px;
   padding: 30px;
   min-height: 100vh;
   transition: margin-left 0.4s ease;
+  width: calc(100% - 270px);
 }
 
-.sidebar.collapsed~.main-content {
+body:has(.sidebar) .sidebar.collapsed~.main-content {
   margin-left: 85px;
   width: calc(100% - 85px);
 }
@@ -216,7 +217,7 @@
   position: absolute;
   bottom: 35px;
   width: 100%;
-  background: #151A2D;  
+  background: #151A2D;
 }
 
 .sidebar-nav .nav-item {
@@ -333,10 +334,16 @@
     margin-left: 0;
   }
 
-  .main-content {
+  /* Main Content for Mobile */
+  body:has(.sidebar) .main-content {
     margin-left: 0 !important;
     width: 100% !important;
     padding: 80px 20px 20px;
+  }
+
+  body:has(.sidebar) .sidebar.collapsed~.main-content {
+    margin-left: 0 !important;
+    width: 100% !important;
   }
 
   /* Adjust container padding for mobile */
