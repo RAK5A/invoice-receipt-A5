@@ -45,7 +45,8 @@
                         <span class="material-symbols-rounded">phone</span>
                         <div>
                             <label>Phone</label>
-                            <p>{{ Auth::user()->phone ?? 'Not provided' }}</p>
+                            {{-- <p>{{ Auth::user()->phone ?? 'Not provided' }}</p> --}}
+                            <p>{{ auth()->user()->phone ?? 'Not provided' }}</p>
                         </div>
                     </div>
 
