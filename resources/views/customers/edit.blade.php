@@ -200,7 +200,6 @@
                             <span class="error-message">{{ $message }}</span>
                         @enderror
                     </div>
-
                     <!-- Address 2 Ship -->
                     <div class="form-group">
                         <label for="address_2_ship">
@@ -245,3 +244,15 @@
                         @enderror
                     </div>
                 </div>
+                <!-- Form Actions -->
+                <div class="form-actions">
+                    <a href="{{ route('customers.index') }}" class="btn-cancel">Cancel</a>
+                    <button type="submit" class="btn-submit">
+                        <span class="material-symbols-rounded">save</span>
+                        Update Customer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</x-layout>
