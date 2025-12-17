@@ -423,10 +423,10 @@
         @endif
 
         <!-- Footer -->
-        <div class="footer">
+        {{-- <div class="footer">
             <p>Thank you for your business!</p>
             <p style="margin-top: 5px;">This is a computer-generated invoice. No signature required.</p>
-        </div>
+        </div> --}}
     </div>
 </body>
 

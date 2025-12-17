@@ -7,6 +7,7 @@ use App\Models\Invoice;
 use App\Models\InvoiceItem;
 use App\Models\Product;
 use App\Models\StoreCustomer;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -355,7 +356,14 @@ class InvoiceController extends Controller
     public function generatePdf($id)
     {
         // TODO: Implement PDF generation
-        return redirect()->back()->with('info', 'PDF generation coming soon!');
+        // return redirect()->back()->with('info', 'PDF generation coming soon!');
+        $invoice = Invoice::with(['customer', 'items'])->findOrFail($id);
+        
+        // Generate PDF
+        $pdf = Pdf::loadView('invoices.pdf', compact('invoice'));
+        
+        // Download PDF
+        return $pdf->download('invoice-' . $invoice->invoice . '.pdf');
     }
 
     /**
