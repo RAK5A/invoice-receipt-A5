@@ -31,21 +31,9 @@ class CustomerController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'address_1' => 'required|string|max:255',
-            'address_2' => 'nullable|string|max:255',
-            'town' => 'required|string|max:255',
-            'county' => 'required|string|max:255',
-            'postcode' => 'required|string|max:255',
-            'phone' => 'required|string|max:100',
-            
-            // Shipping information
-            'name_ship' => 'required|string|max:255',
-            'address_1_ship' => 'required|string|max:255',
-            'address_2_ship' => 'nullable|string|max:255',
-            'town_ship' => 'required|string|max:255',
-            'county_ship' => 'required|string|max:255',
-            'postcode_ship' => 'required|string|max:255',
+            'email' => 'nullable|email|max:255',
+            'phone' => 'required|string|max:10',
+            'address' => 'nullable|string|max:255',
         ]);
 
         StoreCustomer::create($validated);
@@ -69,21 +57,9 @@ class CustomerController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'address_1' => 'required|string|max:255',
-            'address_2' => 'nullable|string|max:255',
-            'town' => 'required|string|max:255',
-            'county' => 'required|string|max:255',
-            'postcode' => 'required|string|max:255',
-            'phone' => 'required|string|max:100',
-            
-            // Shipping information
-            'name_ship' => 'required|string|max:255',
-            'address_1_ship' => 'required|string|max:255',
-            'address_2_ship' => 'nullable|string|max:255',
-            'town_ship' => 'required|string|max:255',
-            'county_ship' => 'required|string|max:255',
-            'postcode_ship' => 'required|string|max:255',
+            'email' => 'nullable|email|max:255',
+            'phone' => 'required|string|max:10',
+            'address' => 'nullable|string|max:255',
         ]);
 
         $customer->update($validated);

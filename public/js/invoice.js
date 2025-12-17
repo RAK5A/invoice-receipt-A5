@@ -5,9 +5,9 @@ let rowCounter = 1;
  * Add new invoice item row
  */
 function addInvoiceRow() {
-    const tableBody = document.getElementById('itemsTableBody');
-    const newRow = document.createElement('tr');
-    newRow.className = 'item-row';
+    const tableBody = document.getElementById("itemsTableBody");
+    const newRow = document.createElement("tr");
+    newRow.className = "item-row";
     newRow.innerHTML = `
         <td>
             <input type="text" name="products[${rowCounter}][name]" class="form-control item-name" placeholder="Product name" required>
@@ -38,15 +38,15 @@ function addInvoiceRow() {
  * Remove invoice item row
  */
 function removeInvoiceRow(button) {
-    const row = button.closest('.item-row');
-    const tableBody = document.getElementById('itemsTableBody');
-    
+    const row = button.closest(".item-row");
+    const tableBody = document.getElementById("itemsTableBody");
+
     // Don't remove if it's the only row
     if (tableBody.children.length > 1) {
         row.remove();
         calculateTotals();
     } else {
-        alert('You must have at least one item!');
+        alert("You must have at least one item!");
     }
 }
 
@@ -54,31 +54,31 @@ function removeInvoiceRow(button) {
  * Calculate row subtotal
  */
 function calculateRow(element) {
-    const row = element.closest('.item-row');
-    const qty = parseFloat(row.querySelector('.item-qty').value) || 0;
-    const price = parseFloat(row.querySelector('.item-price').value) || 0;
-    const discountInput = row.querySelector('.item-discount').value.trim();
-    
+    const row = element.closest(".item-row");
+    const qty = parseFloat(row.querySelector(".item-qty").value) || 0;
+    const price = parseFloat(row.querySelector(".item-price").value) || 0;
+    const discountInput = row.querySelector(".item-discount").value.trim();
+
     let subtotal = qty * price;
     let discountAmount = 0;
-    
+
     // Calculate discount
     if (discountInput) {
-        if (discountInput.includes('%')) {
+        if (discountInput.includes("%")) {
             // Percentage discount
-            const percentage = parseFloat(discountInput.replace('%', '')) || 0;
+            const percentage = parseFloat(discountInput.replace("%", "")) || 0;
             discountAmount = (subtotal * percentage) / 100;
         } else {
             // Fixed amount discount
             discountAmount = parseFloat(discountInput) || 0;
         }
     }
-    
+
     subtotal -= discountAmount;
-    
+
     // Update subtotal
-    row.querySelector('.item-subtotal').value = subtotal.toFixed(2);
-    
+    row.querySelector(".item-subtotal").value = subtotal.toFixed(2);
+
     // Recalculate totals
     calculateTotals();
 }
@@ -87,87 +87,78 @@ function calculateRow(element) {
  * Calculate invoice totals
  */
 function calculateTotals() {
-    const rows = document.querySelectorAll('.item-row');
+    const rows = document.querySelectorAll(".item-row");
     let subtotal = 0;
     let totalDiscount = 0;
-    
-    rows.forEach(row => {
-        const qty = parseFloat(row.querySelector('.item-qty').value) || 0;
-        const price = parseFloat(row.querySelector('.item-price').value) || 0;
-        const discountInput = row.querySelector('.item-discount').value.trim();
-        const itemSubtotal = parseFloat(row.querySelector('.item-subtotal').value) || 0;
-        
+
+    rows.forEach((row) => {
+        const qty = parseFloat(row.querySelector(".item-qty").value) || 0;
+        const price = parseFloat(row.querySelector(".item-price").value) || 0;
+        const discountInput = row.querySelector(".item-discount").value.trim();
+        const itemSubtotal =
+            parseFloat(row.querySelector(".item-subtotal").value) || 0;
+
         const itemTotal = qty * price;
         subtotal += itemTotal;
-        
+
         // Calculate discount amount
         if (discountInput) {
-            if (discountInput.includes('%')) {
-                const percentage = parseFloat(discountInput.replace('%', '')) || 0;
+            if (discountInput.includes("%")) {
+                const percentage =
+                    parseFloat(discountInput.replace("%", "")) || 0;
                 totalDiscount += (itemTotal * percentage) / 100;
             } else {
                 totalDiscount += parseFloat(discountInput) || 0;
             }
         }
     });
-    
-    const shipping = parseFloat(document.getElementById('shipping').value) || 0;
+
+    const shipping = parseFloat(document.getElementById("shipping").value) || 0;
     const subtotalAfterDiscount = subtotal - totalDiscount;
-    
+
     // Calculate VAT (10% of subtotal after discount)
-    const vat = subtotalAfterDiscount * 0.10;
-    
+    const vat = subtotalAfterDiscount * 0.1;
+
     // Calculate grand total
     const grandTotal = subtotalAfterDiscount + shipping + vat;
-    
+
     // Update fields
-    document.getElementById('subtotal').value = subtotal.toFixed(2);
-    document.getElementById('discount').value = totalDiscount.toFixed(2);
-    document.getElementById('vat').value = vat.toFixed(2);
-    document.getElementById('total').value = grandTotal.toFixed(2);
+    document.getElementById("subtotal").value = subtotal.toFixed(2);
+    document.getElementById("discount").value = totalDiscount.toFixed(2);
+    document.getElementById("vat").value = vat.toFixed(2);
+    document.getElementById("total").value = grandTotal.toFixed(2);
 }
 
-/**
- * Copy billing information to shipping
- */
-function copyBillingToShipping() {
-    document.getElementById('customer_name_ship').value = document.getElementById('customer_name').value;
-    document.getElementById('customer_address_1_ship').value = document.getElementById('customer_address_1').value;
-    document.getElementById('customer_address_2_ship').value = document.getElementById('customer_address_2').value;
-    document.getElementById('customer_town_ship').value = document.getElementById('customer_town').value;
-    document.getElementById('customer_county_ship').value = document.getElementById('customer_county').value;
-    document.getElementById('customer_postcode_ship').value = document.getElementById('customer_postcode').value;
-}
 
 /**
  * Show customer selection modal
  */
 function showCustomerModal() {
-    document.getElementById('customerModal').style.display = 'flex';
+    document.getElementById("customerModal").style.display = "flex";
 }
 
 /**
  * Close customer selection modal
  */
 function closeCustomerModal() {
-    document.getElementById('customerModal').style.display = 'none';
+    document.getElementById("customerModal").style.display = "none";
 }
 
 /**
  * Filter customers in modal
  */
 function filterCustomers() {
-    const input = document.getElementById('customerSearch');
+    const input = document.getElementById("customerSearch");
     const filter = input.value.toUpperCase();
-    const table = document.getElementById('customerSelectTable');
-    const rows = table.getElementsByClassName('customer-row');
+    const table = document.getElementById("customerSelectTable");
+    const rows = table.getElementsByClassName("customer-row");
 
     for (let i = 0; i < rows.length; i++) {
         let txtValue = rows[i].textContent || rows[i].innerText;
         if (txtValue.toUpperCase().indexOf(filter) > -1) {
-            rows[i].style.display = '';
+            rows[i].style.display = "";
         } else {
-            rows[i].style.display = 'none';
+            rows[i].style.display = "none";
         }
     }
 }
@@ -177,35 +168,39 @@ function filterCustomers() {
  */
 function selectCustomer(customer) {
     // Billing information
-    document.getElementById('customer_name').value = customer.name;
-    document.getElementById('customer_email').value = customer.email;
-    document.getElementById('customer_phone').value = customer.phone;
-    document.getElementById('customer_address_1').value = customer.address_1;
-    document.getElementById('customer_address_2').value = customer.address_2 || '';
-    document.getElementById('customer_town').value = customer.town;
-    document.getElementById('customer_county').value = customer.county;
-    document.getElementById('customer_postcode').value = customer.postcode;
-    
-    // Shipping information
-    document.getElementById('customer_name_ship').value = customer.name_ship;
-    document.getElementById('customer_address_1_ship').value = customer.address_1_ship;
-    document.getElementById('customer_address_2_ship').value = customer.address_2_ship || '';
-    document.getElementById('customer_town_ship').value = customer.town_ship;
-    document.getElementById('customer_county_ship').value = customer.county_ship;
-    document.getElementById('customer_postcode_ship').value = customer.postcode_ship;
-    
+    document.getElementById("customer_name").value = customer.name;
+    document.getElementById("customer_email").value = customer.email;
+    document.getElementById("customer_phone").value = customer.phone;
+    document.getElementById("customer_address").value = customer.address;
+
     closeCustomerModal();
 }
 
 // Close modal when clicking outside
-window.onclick = function(event) {
-    const modal = document.getElementById('customerModal');
+window.onclick = function (event) {
+    const modal = document.getElementById("customerModal");
     if (event.target === modal) {
         closeCustomerModal();
     }
-}
+};
 
 // Initialize calculations on page load
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener("DOMContentLoaded", function () {
     calculateTotals();
 });
+
+function searchTable() {
+    const input = document.getElementById("searchInput");
+    const filter = input.value.toUpperCase();
+    const table = document.getElementById("invoicesTable");
+    const tr = table.getElementsByTagName("tr");
+
+    for (let i = 1; i < tr.length; i++) {
+        let txtValue = tr[i].textContent || tr[i].innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            tr[i].style.display = "";
+        } else {
+            tr[i].style.display = "none";
+        }
+    }
+}

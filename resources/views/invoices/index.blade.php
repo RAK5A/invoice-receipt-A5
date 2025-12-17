@@ -113,10 +113,6 @@
                                                 title="View PDF" target="_blank">
                                                 <span class="material-symbols-rounded">picture_as_pdf</span>
                                             </a>
-                                            <button onclick="emailInvoice({{ $invoice->id }})" class="action-btn email"
-                                                title="Send Email">
-                                                <span class="material-symbols-rounded">email</span>
-                                            </button>
                                             <form action="{{ route('invoices.destroy', $invoice->id) }}" method="POST"
                                                 class="delete-form"
                                                 onsubmit="return confirm('Are you sure you want to delete this invoice?')">
@@ -147,43 +143,4 @@
             </div>
         </div>
     </div>
-
-    <script>
-        // Search Table Function
-        function searchTable() {
-            const input = document.getElementById('searchInput');
-            const filter = input.value.toUpperCase();
-            const table = document.getElementById('invoicesTable');
-            const tr = table.getElementsByTagName('tr');
-
-            for (let i = 1; i < tr.length; i++) {
-                let txtValue = tr[i].textContent || tr[i].innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                    tr[i].style.display = '';
-                } else {
-                    tr[i].style.display = 'none';
-                }
-            }
-        }
-
-        // Email Invoice Function
-        function emailInvoice(invoiceId) {
-            if (confirm('Send this invoice via email?')) {
-                fetch(`/invoices/${invoiceId}/email`, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Content-Type': 'application/json',
-                    }
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        alert(data.message || 'Email sent successfully!');
-                    })
-                    .catch(error => {
-                        alert('Failed to send email');
-                    });
-            }
-        }
-    </script>
 </x-layout>

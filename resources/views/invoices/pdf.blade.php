@@ -327,30 +327,11 @@
                     <div class="info-title">Bill To</div>
                     <div class="info-content">
                         <strong>{{ $invoice->customer->name }}</strong>
-                        {{ $invoice->customer->address_1 }}<br>
-                        @if($invoice->customer->address_2)
-                            {{ $invoice->customer->address_2 }}<br>
-                        @endif
-                        {{ $invoice->customer->town }}, {{ $invoice->customer->postcode }}<br>
-                        {{ $invoice->customer->county }}<br>
+                        {{ $invoice->customer->address }}<br>
                         <br>
                         <strong>Contact:</strong><br>
                         {{ $invoice->customer->email }}<br>
                         {{ $invoice->customer->phone }}
-                    </div>
-                </div>
-            </div>
-            <div class="info-right">
-                <div class="info-box">
-                    <div class="info-title">Ship To</div>
-                    <div class="info-content">
-                        <strong>{{ $invoice->customer->name_ship }}</strong>
-                        {{ $invoice->customer->address_1_ship }}<br>
-                        @if($invoice->customer->address_2_ship)
-                            {{ $invoice->customer->address_2_ship }}<br>
-                        @endif
-                        {{ $invoice->customer->town_ship }}, {{ $invoice->customer->postcode_ship }}<br>
-                        {{ $invoice->customer->county_ship }}
                     </div>
                 </div>
             </div>
@@ -394,15 +375,8 @@
                 </div>
             @endif
 
-            @if($invoice->shipping > 0)
-                <div class="total-row">
-                    <div class="total-label">Shipping:</div>
-                    <div class="total-value">${{ number_format($invoice->shipping, 2) }}</div>
-                </div>
-            @endif
-
             <div class="total-row">
-                <div class="total-label">Tax/VAT (10%):</div>
+                <div class="total-label">Tax/VAT (1%):</div>
                 <div class="total-value">${{ number_format($invoice->vat, 2) }}</div>
             </div>
 
