@@ -27,7 +27,7 @@
     ```php artisan migrate```
     or
     ```php artisan migrate:fresh --seeder``` (migrate and seed data at the same time)
-12. > setup Dompdf (for downloading the pdf):
+12. setup Dompdf (for downloading the pdf):
     ```composer require barryvdh/laravel-dompdf```
 13. run: ```php artisan serve```
 
