@@ -88,29 +88,30 @@
                 </div>
 
                 <div class="form-grid">
-                    {{-- @foreach($invoice->customer as $customer) --}}
                     <div class="form-group">
                         <label for="customer_name">Name <span class="required">*</span></label>
-                        <input type="text" id="customer_name" name="customer_name" class="form-control" required>
-                        {{-- <input type="hidden" id="customer_id" name="customer_id" value="{{ $invoice->customer_id }}"> --}}
+                        <input type="text" id="customer_name" name="customer_name" class="form-control" 
+                        value="{{ old('customer_name', $invoice->customer->name ?? '') }}" 
+                        required>
                     </div>
 
                     <div class="form-group">
                         <label for="customer_email">Email </label>
-                        <input type="email" id="customer_email" name="customer_email" class="form-control">
+                        <input type="email" id="customer_email" name="customer_email" class="form-control"
+                        value="{{ old('customer_email', $invoice->customer->email ?? '') }}" >
                     </div>
 
                     <div class="form-group">
                         <label for="customer_phone">Phone <span class="required">*</span></label>
-                        <input type="tel" id="customer_phone" name="customer_phone" class="form-control" required>
+                        <input type="tel" id="customer_phone" name="customer_phone" class="form-control" required
+                        value="{{ old('customer_phone', $invoice->customer->phone ?? '') }}" >
                     </div>
 
                     <div class="form-group">
                         <label for="customer_address">Address</label>
-                        <input type="text" id="customer_address" name="customer_address" class="form-control">
+                        <input type="text" id="customer_address" name="customer_address" class="form-control"value="{{ old('customer_address', $invoice->customer->address ?? '') }}">
                     </div>
                 </div>
-                {{-- @endforeach --}}
             </div>
 
             <!-- Invoice Items -->
@@ -217,7 +218,7 @@
                 <a href="{{ route('invoices.index') }}" class="btn-cancel">Cancel</a>
                 <button type="submit" class="btn-submit">
                     <span class="material-symbols-rounded">save</span>
-                    Create Invoice
+                    Update Invoice
                 </button>
             </div>
         </form>
