@@ -71,9 +71,9 @@
                 </button>
             </form>
 
-            <div class="auth-footer">
+            {{-- <div class="auth-footer">
                 <p>Don't have an account? <a href="{{ route('register') }}">Sign up</a></p>
-            </div>
+            </div> --}}
         </div>
     </div>
 </x-layout>
