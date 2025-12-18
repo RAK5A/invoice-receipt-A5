@@ -95,10 +95,16 @@
 
     <script>
         // Search Table Function
-        function searchTable() {
+        function searchTable(tableId) {
             const input = document.getElementById('searchInput');
             const filter = input.value.toUpperCase();
-            const table = document.getElementById('productsTable');
+            const table = document.getElementById(tableId);
+
+            if (!table) {
+                console.error(`Table with ID "${tableId}" not found`);
+                return;
+            }
+
             const tr = table.getElementsByTagName('tr');
 
             for (let i = 1; i < tr.length; i++) {

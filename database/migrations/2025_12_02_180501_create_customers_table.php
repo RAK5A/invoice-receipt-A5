@@ -14,19 +14,9 @@ return new class extends Migration {
             $table->id();
             $table->string('invoice');
             $table->string('name');
-            $table->string('email');
-            $table->string('address_1');
-            $table->string('address_2')->nullable();
-            $table->string('town');
-            $table->string('county');
-            $table->string('postcode');
-            $table->string('phone', 100);
-            $table->string('name_ship');
-            $table->string('address_1_ship');
-            $table->string('address_2_ship')->nullable();
-            $table->string('town_ship');
-            $table->string('county_ship');
-            $table->string('postcode_ship');
+            $table->string('email')->nullable();
+            $table->string('phone', 10);
+            $table->string('address')->nullable();
             $table->timestamps();
         });
     }

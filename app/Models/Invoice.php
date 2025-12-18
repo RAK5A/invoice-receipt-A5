@@ -15,7 +15,6 @@ class Invoice extends Model
         'invoice_date',
         'invoice_due_date',
         'subtotal',
-        'shipping',
         'discount',
         'vat',
         'total',
@@ -26,7 +25,6 @@ class Invoice extends Model
 
     protected $casts = [
         'subtotal' => 'decimal:2',
-        'shipping' => 'decimal:2',
         'discount' => 'decimal:2',
         'vat' => 'decimal:2',
         'total' => 'decimal:2',

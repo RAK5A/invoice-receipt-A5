@@ -16,11 +16,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // User::factory(10)->create();
+
         User::create([
             'name' => 'Admin User',
             'username' => 'admin',
             'email' => 'admin@step.org',
-            'phone' => '012345678',
+            'phone' => '1234567890',
             'password' => Hash::make('admin123'),
         ]);
     }

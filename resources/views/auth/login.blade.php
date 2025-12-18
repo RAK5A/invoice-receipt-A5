@@ -2,7 +2,15 @@
     <div class="auth-container">
         <div class="auth-card">
             <div class="auth-header">
-                <img src="{{ asset('images/logo.png') }}" alt="Logo" class="auth-logo">
+                <div class="auth-logo-container">
+                    <div class="auth-logo-badge">
+                        <span class="material-symbols-rounded">receipt</span>
+                    </div>
+                    <div class="auth-logo-text">
+                        <span class="auth-logo-primary">Invoice</span>
+                        <span class="auth-logo-secondary">System</span>
+                    </div>
+                </div>
                 <h1>Welcome Back</h1>
                 <p>Sign in to your account to continue</p>
             </div>
@@ -53,7 +61,7 @@
                         <span>Remember me</span>
                     </label>
                     @if (Route::has('password.request'))
-                        <a href="{{ route('password.request') }}" class="forgot-link">Forgot password?</a>
+                    <a href="{{ route('password.request') }}" class="forgot-link">Forgot password?</a>
                     @endif
                 </div> --}}
 
@@ -63,9 +71,9 @@
                 </button>
             </form>
 
-            <div class="auth-footer">
+            {{-- <div class="auth-footer">
                 <p>Don't have an account? <a href="{{ route('register') }}">Sign up</a></p>
-            </div>
+            </div> --}}
         </div>
     </div>
 </x-layout>

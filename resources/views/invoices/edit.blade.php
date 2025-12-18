@@ -1,9 +1,9 @@
-<x-layout title="Create Invoice - Invoice System">
+<x-layout title="Update Invoice - Invoice System">
     <div class="page-container">
         <!-- Page Header -->
         <div class="page-header">
             <div>
-                <h1>Create New Invoice</h1>
+                <h1>Update Invoice</h1>
                 <p>Generate a new invoice, quote, or receipt</p>
             </div>
             <a href="{{ route('invoices.index') }}" class="btn-secondary">
@@ -51,7 +51,7 @@
                             Invoice Number
                         </label>
                         <input type="text" id="invoice_number" name="invoice_number" class="form-control"
-                            value="{{ $nextInvoiceNumber }}" required readonly>
+                            value="{{ $invoice->invoice }}" required readonly>
                     </div>
 
                     <!-- Invoice Date -->
@@ -90,22 +90,26 @@
                 <div class="form-grid">
                     <div class="form-group">
                         <label for="customer_name">Name <span class="required">*</span></label>
-                        <input type="text" id="customer_name" name="customer_name" class="form-control" required>
+                        <input type="text" id="customer_name" name="customer_name" class="form-control" 
+                        value="{{ old('customer_name', $invoice->customer->name ?? '') }}" 
+                        required>
                     </div>
 
                     <div class="form-group">
                         <label for="customer_email">Email </label>
-                        <input type="email" id="customer_email" name="customer_email" class="form-control">
+                        <input type="email" id="customer_email" name="customer_email" class="form-control"
+                        value="{{ old('customer_email', $invoice->customer->email ?? '') }}" >
                     </div>
 
                     <div class="form-group">
                         <label for="customer_phone">Phone <span class="required">*</span></label>
-                        <input type="tel" id="customer_phone" name="customer_phone" class="form-control" required>
+                        <input type="tel" id="customer_phone" name="customer_phone" class="form-control" required
+                        value="{{ old('customer_phone', $invoice->customer->phone ?? '') }}" >
                     </div>
 
                     <div class="form-group">
                         <label for="customer_address">Address</label>
-                        <input type="text" id="customer_address" name="customer_address" class="form-control">
+                        <input type="text" id="customer_address" name="customer_address" class="form-control"value="{{ old('customer_address', $invoice->customer->address ?? '') }}">
                     </div>
                 </div>
             </div>
@@ -134,35 +138,40 @@
                             </tr>
                         </thead>
                         <tbody id="itemsTableBody">
-                            <!-- Initial row -->
-                            <tr class="item-row">
-                                <td>
-                                    <input type="text" name="products[0][name]" class="form-control item-name"
-                                        placeholder="Product name" required>
-                                </td>
-                                <td>
-                                    <input type="number" name="products[0][qty]" class="form-control item-qty" value="1"
-                                        min="1" required onchange="calculateRow(this)">
-                                </td>
-                                <td>
-                                    <input type="number" name="products[0][price]" class="form-control item-price"
-                                        value="0.00" step="0.01" min="0" required onchange="calculateRow(this)">
-                                </td>
-                                <td>
-                                    <input type="text" name="products[0][discount]" class="form-control item-discount"
-                                        placeholder="0 or 10%" onchange="calculateRow(this)">
-                                </td>
-                                <td>
-                                    <input type="number" name="products[0][subtotal]" class="form-control item-subtotal"
-                                        value="0.00" step="0.01" readonly>
-                                </td>
-                                <td>
-                                    <button type="button" class="action-btn delete-sm" onclick="removeInvoiceRow(this)"
-                                        title="Remove">
-                                        <span class="material-symbols-rounded">close</span>
-                                    </button>
-                                </td>
-                            </tr>
+                            @foreach($invoice->items as $index => $item)
+                                <tr class="item-row">
+                                    <td>
+                                        <input type="text" name="products[{{ $index }}][name]"
+                                            class="form-control item-name" value="{{ $item->product }}" required>
+                                    </td>
+                                    <td>
+                                        <input type="number" name="products[{{ $index }}][qty]"
+                                            class="form-control item-qty" value="{{ $item->qty }}" min="1" required
+                                            onchange="calculateRow(this)">
+                                    </td>
+                                    <td>
+                                        <input type="number" name="products[{{ $index }}][price]"
+                                            class="form-control item-price" value="{{ $item->price }}" step="0.01" min="0"
+                                            required onchange="calculateRow(this)">
+                                    </td>
+                                    <td>
+                                        <input type="text" name="products[{{ $index }}][discount]"
+                                            class="form-control item-discount" value="{{ $item->discount }}"
+                                            placeholder="0 or 10%" onchange="calculateRow(this)">
+                                    </td>
+                                    <td>
+                                        <input type="number" name="products[{{ $index }}][subtotal]"
+                                            class="form-control item-subtotal" value="{{ $item->subtotal }}" step="0.01"
+                                            readonly>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="action-btn delete-sm" onclick="removeInvoiceRow(this)"
+                                            title="Remove">
+                                            <span class="material-symbols-rounded">close</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -173,38 +182,33 @@
                     <div class="form-group">
                         <label for="notes">Additional Notes</label>
                         <textarea id="notes" name="notes" class="form-control" rows="4"
-                            placeholder="Any special instructions or notes..."></textarea>
+                            placeholder="Any special instructions or notes...">{{ $invoice->notes }}</textarea>
                     </div>
                 </div>
 
                 <div class="totals-right">
                     <div class="total-row">
                         <label>Subtotal:</label>
-                        <input type="number" id="subtotal" name="subtotal" class="total-input" value="0.00" step="0.01"
-                            readonly>
+                        <input type="number" id="subtotal" name="subtotal" class="total-input"
+                            value="{{ $invoice->subtotal }}" step="0.01" readonly>
                     </div>
 
                     <div class="total-row">
                         <label>Discount:</label>
-                        <input type="number" id="discount" name="discount" class="total-input" value="0.00" step="0.01"
-                            readonly>
-                    </div>
-
-                    <div class="total-row">
-                        <label>Shipping:</label>
-                        <input type="number" id="shipping" name="shipping" class="total-input-editable" value="0.00"
-                            step="0.01" min="0" onchange="calculateTotals()">
+                        <input type="number" id="discount" name="discount" class="total-input"
+                            value="{{ $invoice->discount }}" step="0.01" readonly>
                     </div>
 
                     <div class="total-row">
                         <label>TAX/VAT (5%):</label>
-                        <input type="number" id="vat" name="vat" class="total-input" value="0.00" step="0.01" readonly>
+                        <input type="number" id="vat" name="vat" class="total-input" value="{{ $invoice->vat }}"
+                            step="0.01" readonly>
                     </div>
 
                     <div class="total-row grand-total">
                         <label>Total:</label>
-                        <input type="number" id="total" name="total" class="total-input" value="0.00" step="0.01"
-                            readonly>
+                        <input type="number" id="total" name="total" class="total-input" value="{{ $invoice->total }}"
+                            step="0.01" readonly>
                     </div>
                 </div>
             </div>
@@ -214,7 +218,7 @@
                 <a href="{{ route('invoices.index') }}" class="btn-cancel">Cancel</a>
                 <button type="submit" class="btn-submit">
                     <span class="material-symbols-rounded">save</span>
-                    Create Invoice
+                    Update Invoice
                 </button>
             </div>
         </form>

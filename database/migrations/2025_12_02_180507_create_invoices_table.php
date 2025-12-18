@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('invoice_date');
             $table->string('invoice_due_date');
             $table->decimal('subtotal', 10, 2)->default(0);
-            $table->decimal('shipping', 10, 2)->default(0);
             $table->decimal('discount', 10, 2)->default(0);
             $table->decimal('vat', 10, 2)->default(0);
             $table->decimal('total', 10, 2)->default(0);

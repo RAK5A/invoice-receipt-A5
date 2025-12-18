@@ -7,6 +7,7 @@ use App\Models\Invoice;
 use App\Models\InvoiceItem;
 use App\Models\Product;
 use App\Models\StoreCustomer;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -53,21 +54,9 @@ class InvoiceController extends Controller
 
             // Customer billing
             'customer_name' => 'required|string|max:255',
-            'customer_email' => 'required|email',
+            'customer_email' => 'nullable|email',
             'customer_phone' => 'required|string',
-            'customer_address_1' => 'required|string',
-            'customer_address_2' => 'nullable|string',
-            'customer_town' => 'required|string',
-            'customer_county' => 'required|string',
-            'customer_postcode' => 'required|string',
-
-            // Customer shipping
-            'customer_name_ship' => 'required|string|max:255',
-            'customer_address_1_ship' => 'required|string',
-            'customer_address_2_ship' => 'nullable|string',
-            'customer_town_ship' => 'required|string',
-            'customer_county_ship' => 'required|string',
-            'customer_postcode_ship' => 'required|string',
+            'customer_address' => 'nullable|string',
 
             // Invoice items
             'products' => 'required|array|min:1',
@@ -84,7 +73,7 @@ class InvoiceController extends Controller
             'vat' => 'nullable|numeric|min:0',
             'total' => 'required|numeric|min:0',
             'notes' => 'nullable|string',
-            'custom_email' => 'nullable|string',
+            // 'custom_email' => 'nullable|string',
         ]);
 
         DB::beginTransaction();
@@ -93,11 +82,11 @@ class InvoiceController extends Controller
             // Create Invoice
             $invoice = Invoice::create([
                 'invoice' => $validated['invoice_number'],
-                'custom_email' => $validated['custom_email'] ?? null,
+                // 'custom_email' => $validated['custom_email'] ?? null,
                 'invoice_date' => $validated['invoice_date'],
                 'invoice_due_date' => $validated['invoice_due_date'],
                 'subtotal' => $validated['subtotal'],
-                'shipping' => $validated['shipping'] ?? 0,
+                // 'shipping' => $validated['shipping'] ?? 0,
                 'discount' => $validated['discount'] ?? 0,
                 'vat' => $validated['vat'] ?? 0,
                 'total' => $validated['total'],
@@ -110,19 +99,9 @@ class InvoiceController extends Controller
             Customer::create([
                 'invoice' => $validated['invoice_number'],
                 'name' => $validated['customer_name'],
-                'email' => $validated['customer_email'],
-                'address_1' => $validated['customer_address_1'],
-                'address_2' => $validated['customer_address_2'] ?? null,
-                'town' => $validated['customer_town'],
-                'county' => $validated['customer_county'],
-                'postcode' => $validated['customer_postcode'],
                 'phone' => $validated['customer_phone'],
-                'name_ship' => $validated['customer_name_ship'],
-                'address_1_ship' => $validated['customer_address_1_ship'],
-                'address_2_ship' => $validated['customer_address_2_ship'] ?? null,
-                'town_ship' => $validated['customer_town_ship'],
-                'county_ship' => $validated['customer_county_ship'],
-                'postcode_ship' => $validated['customer_postcode_ship'],
+                'email' => $validated['customer_email'],
+                'address' => $validated['customer_address'],
             ]);
 
             // Create Invoice Items
@@ -138,8 +117,6 @@ class InvoiceController extends Controller
             }
 
             DB::commit();
-
-            // TODO: Generate PDF here (we'll add this later)
 
             return redirect()->route('invoices.index')
                 ->with('success', 'Invoice has been created successfully!');
@@ -180,21 +157,9 @@ class InvoiceController extends Controller
 
             // Customer billing
             'customer_name' => 'required|string|max:255',
-            'customer_email' => 'required|email',
+            'customer_email' => 'nullable|email',
             'customer_phone' => 'required|string',
-            'customer_address_1' => 'required|string',
-            'customer_address_2' => 'nullable|string',
-            'customer_town' => 'required|string',
-            'customer_county' => 'required|string',
-            'customer_postcode' => 'required|string',
-
-            // Customer shipping
-            'customer_name_ship' => 'required|string|max:255',
-            'customer_address_1_ship' => 'required|string',
-            'customer_address_2_ship' => 'nullable|string',
-            'customer_town_ship' => 'required|string',
-            'customer_county_ship' => 'required|string',
-            'customer_postcode_ship' => 'required|string',
+            'customer_address' => 'nullable|string',
 
             // Invoice items
             'products' => 'required|array|min:1',
@@ -207,11 +172,9 @@ class InvoiceController extends Controller
             // Invoice totals
             'subtotal' => 'required|numeric|min:0',
             'discount' => 'nullable|numeric|min:0',
-            'shipping' => 'nullable|numeric|min:0',
             'vat' => 'nullable|numeric|min:0',
             'total' => 'required|numeric|min:0',
             'notes' => 'nullable|string',
-            'custom_email' => 'nullable|string',
         ]);
 
         DB::beginTransaction();
@@ -219,11 +182,9 @@ class InvoiceController extends Controller
         try {
             // Update Invoice
             $invoice->update([
-                'custom_email' => $validated['custom_email'] ?? null,
                 'invoice_date' => $validated['invoice_date'],
                 'invoice_due_date' => $validated['invoice_due_date'],
                 'subtotal' => $validated['subtotal'],
-                'shipping' => $validated['shipping'] ?? 0,
                 'discount' => $validated['discount'] ?? 0,
                 'vat' => $validated['vat'] ?? 0,
                 'total' => $validated['total'],
@@ -236,18 +197,8 @@ class InvoiceController extends Controller
             $invoice->customer->update([
                 'name' => $validated['customer_name'],
                 'email' => $validated['customer_email'],
-                'address_1' => $validated['customer_address_1'],
-                'address_2' => $validated['customer_address_2'] ?? null,
-                'town' => $validated['customer_town'],
-                'county' => $validated['customer_county'],
-                'postcode' => $validated['customer_postcode'],
                 'phone' => $validated['customer_phone'],
-                'name_ship' => $validated['customer_name_ship'],
-                'address_1_ship' => $validated['customer_address_1_ship'],
-                'address_2_ship' => $validated['customer_address_2_ship'] ?? null,
-                'town_ship' => $validated['customer_town_ship'],
-                'county_ship' => $validated['customer_county_ship'],
-                'postcode_ship' => $validated['customer_postcode_ship'],
+                'address' => $validated['customer_address'],
             ]);
 
             // Delete old items and create new ones
@@ -265,8 +216,6 @@ class InvoiceController extends Controller
             }
 
             DB::commit();
-
-            // TODO: Regenerate PDF here
 
             return redirect()->route('invoices.index')
                 ->with('success', 'Invoice has been updated successfully!');
@@ -322,7 +271,6 @@ class InvoiceController extends Controller
             'Status',
             'Subtotal',
             'Discount',
-            'Shipping',
             'VAT',
             'Total',
         ]);
@@ -339,7 +287,6 @@ class InvoiceController extends Controller
                 ucfirst($invoice->status),
                 $invoice->subtotal,
                 $invoice->discount,
-                $invoice->shipping,
                 $invoice->vat,
                 $invoice->total,
             ]);
@@ -354,16 +301,13 @@ class InvoiceController extends Controller
      */
     public function generatePdf($id)
     {
-        // TODO: Implement PDF generation
-        return redirect()->back()->with('info', 'PDF generation coming soon!');
-    }
-
-    /**
-     * Send invoice via email
-     */
-    public function sendEmail($id)
-    {
-        // TODO: Implement email sending
-        return redirect()->back()->with('info', 'Email sending coming soon!');
+        // return redirect()->back()->with('info', 'PDF generation coming soon!');
+        $invoice = Invoice::with(['customer', 'items'])->findOrFail($id);
+        
+        // Generate PDF
+        $pdf = Pdf::loadView('invoices.pdf', compact('invoice'));
+        
+        // Download PDF
+        return $pdf->download('invoice-' . $invoice->invoice . '.pdf');
     }
 }

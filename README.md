@@ -7,11 +7,24 @@
 4. select -> mysql
 5. select -> no
 6. select -> no
+<<<<<<< HEAD
 7. npm i
 8. config username, password, database name in .env
 9. ```php artisan migrate```
 10. ```php artisan db:seed``` (seed data into database)
 11. > setup Fortify:
+=======
+
+> [!IMPORTANT]
+> Start from here
+7. install composer: 
+    ```composer install```
+8. ```npm i``` and ```npm run build```
+9. config username, password, database name in .env
+10. ```php artisan migrate```
+11. ```php artisan db:seed``` (seed data into database)
+12. - setup Fortify:
+>>>>>>> 53e843f32ebe6bab63563691e9c2b5d3fbd7468b
     ```composer require laravel/fortify```
     - after that enter this command:
     ```php artisan fortify:install```
@@ -19,7 +32,21 @@
     ```php artisan migrate```
     or
     ```php artisan migrate:fresh --seeder``` (migrate and seed data at the same time)
+<<<<<<< HEAD
 
 12. > setup Dompdf (for downloading the pdf):
     ```composer require barryvdh/laravel-dompdf```
 13. run: ```php artisan serve```
+=======
+
+> [!NOTE]
+> Before running the file user MUST enter this ```php artisan key:generate``` inorder to run without error
+
+13. - setup Dompdf (for downloading the pdf):
+    ```composer require barryvdh/laravel-dompdf```
+    - after that run:
+    ```php artisan vendor:publish --provider="Barryvdh\DomPDF\ServiceProvider"```
+1. - run:
+    ```php artisan serve```
+
+>>>>>>> 53e843f32ebe6bab63563691e9c2b5d3fbd7468b

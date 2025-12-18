@@ -1,16 +1,14 @@
-/* Importing Google Fonts - Poppins */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Poppins", sans-serif;
+body:has(.sidebar) .main-content {
+  margin-left: 270px;
+  padding: 30px;
+  min-height: 100vh;
+  transition: margin-left 0.4s ease;
+  width: calc(100% - 270px);
 }
 
-body {
-  min-height: 100vh;
-  background: linear-gradient(#F1F3FF, #CBD4FF);
+body:has(.sidebar) .sidebar.collapsed~.main-content {
+  margin-left: 85px;
+  width: calc(100% - 85px);
 }
 
 .header-logo {
@@ -219,7 +217,7 @@ body {
   position: absolute;
   bottom: 35px;
   width: 100%;
-  background: #151A2D;  
+  background: #151A2D;
 }
 
 .sidebar-nav .nav-item {
@@ -301,6 +299,41 @@ body {
   display: none;
 }
 
+/* Logout form styles */
+.logout-form {
+  width: 100%;
+}
+
+.logout-btn {
+  display: flex;
+  gap: 12px;
+  white-space: nowrap;
+  border-radius: 8px;
+  padding: 11px 15px;
+  align-items: center;
+  text-decoration: none;
+  border: 1px solid #151A2D;
+  transition: 0.4s ease;
+  color: #fff;
+  background: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  font-family: "Poppins", sans-serif;
+  font-size: 1rem;
+}
+
+.logout-btn:hover {
+  color: #151A2D;
+  background: #EEF2FF;
+}
+
+/* Collapsed state */
+.sidebar.collapsed .logout-btn .nav-label {
+  opacity: 0;
+  pointer-events: none;
+}
+
 /* Responsive media query code for small screens */
 @media (max-width: 768px) {
   .sidebar-menu-button {
@@ -334,5 +367,29 @@ body {
 
   .sidebar.collapsed~.main-content {
     margin-left: 0;
+  }
+
+  /* Main Content for Mobile */
+  body:has(.sidebar) .main-content {
+    margin-left: 0 !important;
+    width: 100% !important;
+    padding: 80px 20px 20px;
+  }
+
+  body:has(.sidebar) .sidebar.collapsed~.main-content {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+
+  /* Adjust container padding for mobile */
+  .dashboard-container,
+  .page-container {
+    padding: 0;
+  }
+
+  /* Adjust table responsiveness */
+  .table-responsive {
+    margin: 0 -20px;
+    padding: 0 20px;
   }
 }

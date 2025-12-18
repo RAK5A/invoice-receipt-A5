@@ -59,10 +59,9 @@
                         <label for="product_desc">
                             <span class="material-symbols-rounded">description</span>
                             Product Description
-                            <span class="required">*</span>
                         </label>
                         <textarea id="product_desc" name="product_desc"
-                            class="form-control @error('product_desc') is-invalid @enderror" rows="4" required
+                            class="form-control @error('product_desc') is-invalid @enderror" rows="4"
                             placeholder="Enter product description">{{ old('product_desc', $product->product_desc) }}</textarea>
                         @error('product_desc')
                             <span class="error-message">{{ $message }}</span>

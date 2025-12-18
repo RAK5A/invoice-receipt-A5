@@ -44,7 +44,7 @@
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Phone</th>
-                                <th>Location</th>
+                                <th>Address</th>
                                 <th>Created</th>
                                 <th>Actions</th>
                             </tr>
@@ -61,7 +61,7 @@
                                     </td>
                                     <td>{{ $customer->email }}</td>
                                     <td>{{ $customer->phone }}</td>
-                                    <td>{{ $customer->town }}, {{ $customer->county }}</td>
+                                    <td>{{ $customer->address }}</td>
                                     <td>{{ $customer->created_at->format('M d, Y') }}</td>
                                     <td>
                                         <div class="action-buttons">
