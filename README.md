@@ -7,6 +7,9 @@
 4. select -> mysql
 5. select -> no
 6. select -> no
+
+> [!IMPORTANT]
+> Start from here
 7. install composer: 
     ```composer install```
 8. ```npm i``` and ```npm run build```
