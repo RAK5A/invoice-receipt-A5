@@ -34,3 +34,4 @@
     ```php artisan vendor:publish --provider="Barryvdh\DomPDF\ServiceProvider"```
 1. - run:
     ```php artisan serve```
+
