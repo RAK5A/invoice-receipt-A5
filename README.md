@@ -7,12 +7,7 @@
 4. select -> mysql
 5. select -> no
 6. select -> no
-7. npm i
-8. config username, password, database name in .env
-9. ```php artisan migrate```
-10. ```php artisan db:seed``` (seed data into database)
-11. > setup Fortify:
-
+   
 > [!IMPORTANT]
 > Start from here
 7. install composer: 
