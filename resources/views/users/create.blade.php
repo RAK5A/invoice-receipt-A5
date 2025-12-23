@@ -1,4 +1,4 @@
-<x-layout title="Add User - Invoice System">
+<x-layout title="Add User - Invoice System" :navbar="true">
     <div class="page-container">
         <!-- Page Header -->
         <div class="page-header">
@@ -102,6 +102,19 @@
                         </label>
                         <input type="password" id="password_confirmation" name="password_confirmation"
                             class="form-control" required placeholder="Confirm password">
+                    </div>
+
+                    <!-- Role Selection -->
+                    <div class="form-group">
+                        <label for="role">
+                            <span class="material-symbols-rounded">admin_panel_settings</span>
+                            User Role
+                            <span class="required">*</span>
+                        </label>
+                        <select name="role" id="role" class="form-control" required>
+                            <option value="employee">Employee</option>
+                            <option value="admin">Admin</option>
+                        </select>
                     </div>
                 </div>
 

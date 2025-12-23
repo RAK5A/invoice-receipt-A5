@@ -1,4 +1,4 @@
-<x-layout title="Edit User - Invoice System">
+<x-layout title="Edit User - Invoice System" :navbar="true">
     <div class="page-container">
         <!-- Page Header -->
         <div class="page-header">
@@ -14,7 +14,8 @@
 
         <!-- Form Card -->
         <div class="form-card">
-            <form action="{{ route('users.update', $user->id) }}" method="POST">
+            <form action="{{ route('users.update', $user->id) }}" method="POST"
+                onsubmit="console.log('Form submitting...', this); return true;">
                 @csrf
                 @method('PUT')
 
@@ -101,6 +102,19 @@
                         </label>
                         <input type="password" id="password_confirmation" name="password_confirmation"
                             class="form-control" placeholder="Confirm new password">
+                    </div>
+
+                    <!-- Role Selection -->
+                    <div class="form-group">
+                        <label for="role">
+                            <span class="material-symbols-rounded">admin_panel_settings</span>
+                            User Role
+                            <span class="required">*</span>
+                        </label>
+                        <select name="role" id="role" class="form-control" required>
+                            <option value="employee" {{ old('role', $user->role) == 'employee' ? 'selected' : '' }}>Employee</option>
+                            <option value="admin" {{ old('role', $user->role) == 'admin' ? 'selected' : '' }}>Admin</option>
+                        </select>
                     </div>
                 </div>
 

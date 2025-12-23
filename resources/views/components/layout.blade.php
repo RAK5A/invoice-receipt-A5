@@ -29,7 +29,7 @@
 
     <script src="{{ asset('js/sidebar.js') }}"></script>
     <script src="{{ asset('js/invoice.js') }}"></script>
-    {{--<script src="{{ asset('js/search.js') }}"></script> --}}
+    <script src="{{ asset('js/search.js') }}"></script>
 </body>
 
 </html>

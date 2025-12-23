@@ -1,10 +1,10 @@
-<x-layout title="Update Invoice - Invoice System">
+<x-layout title="Update Invoice - Invoice System" :navbar="true">
     <div class="page-container">
         <!-- Page Header -->
         <div class="page-header">
             <div>
-                <h1>Update Invoice</h1>
-                <p>Generate a new invoice, quote, or receipt</p>
+                <h1>Update Invoice #{{ $invoice->invoice }}</h1>
+                <p>Update invoice details and items</p>
             </div>
             <a href="{{ route('invoices.index') }}" class="btn-secondary">
                 <span class="material-symbols-rounded">arrow_back</span>
@@ -13,8 +13,9 @@
         </div>
 
         <!-- Invoice Form -->
-        <form action="{{ route('invoices.store') }}" method="POST" id="invoiceForm">
+        <form action="{{ route('invoices.update', $invoice->id) }}" method="POST" id="invoiceForm">
             @csrf
+            @method('PUT')
 
             <!-- Invoice Header Card -->
             <div class="invoice-header-card">
@@ -26,9 +27,11 @@
                             Type
                         </label>
                         <select id="invoice_type" name="invoice_type" class="form-control" required>
-                            <option value="invoice" selected>Invoice</option>
-                            <option value="quote">Quote</option>
-                            <option value="receipt">Receipt</option>
+                            <option value="invoice" {{ $invoice->invoice_type == 'invoice' ? 'selected' : '' }}>Invoice
+                            </option>
+                            <option value="quote" {{ $invoice->invoice_type == 'quote' ? 'selected' : '' }}>Quote</option>
+                            <option value="receipt" {{ $invoice->invoice_type == 'receipt' ? 'selected' : '' }}>Receipt
+                            </option>
                         </select>
                     </div>
 
@@ -39,8 +42,8 @@
                             Status
                         </label>
                         <select id="invoice_status" name="invoice_status" class="form-control" required>
-                            <option value="open" selected>Open</option>
-                            <option value="paid">Paid</option>
+                            <option value="open" {{ $invoice->status == 'open' ? 'selected' : '' }}>Open</option>
+                            <option value="paid" {{ $invoice->status == 'paid' ? 'selected' : '' }}>Paid</option>
                         </select>
                     </div>
 
@@ -61,7 +64,7 @@
                             Invoice Date
                         </label>
                         <input type="date" id="invoice_date" name="invoice_date" class="form-control"
-                            value="{{ date('Y-m-d') }}" required>
+                            value="{{ $invoice->invoice_date }}" required>
                     </div>
 
                     <!-- Due Date -->
@@ -71,7 +74,7 @@
                             Due Date
                         </label>
                         <input type="date" id="invoice_due_date" name="invoice_due_date" class="form-control"
-                            value="{{ date('Y-m-d', strtotime('+1 week')) }}" required>
+                            value="{{ $invoice->invoice_due_date }}" required>
                     </div>
                 </div>
             </div>
@@ -90,92 +93,61 @@
                 <div class="form-grid">
                     <div class="form-group">
                         <label for="customer_name">Name <span class="required">*</span></label>
-                        <input type="text" id="customer_name" name="customer_name" class="form-control" 
-                        value="{{ old('customer_name', $invoice->customer->name ?? '') }}" 
-                        required>
+                        <input type="text" id="customer_name" name="customer_name" class="form-control"
+                            value="{{ $invoice->customer->name ?? '' }}" required>
                     </div>
 
                     <div class="form-group">
-                        <label for="customer_email">Email </label>
+                        <label for="customer_email">Email</label>
                         <input type="email" id="customer_email" name="customer_email" class="form-control"
-                        value="{{ old('customer_email', $invoice->customer->email ?? '') }}" >
+                            value="{{ $invoice->customer->email ?? '' }}">
                     </div>
 
                     <div class="form-group">
                         <label for="customer_phone">Phone <span class="required">*</span></label>
                         <input type="tel" id="customer_phone" name="customer_phone" class="form-control" required
-                        value="{{ old('customer_phone', $invoice->customer->phone ?? '') }}" >
+                            value="{{ $invoice->customer->phone ?? '' }}">
                     </div>
 
                     <div class="form-group">
                         <label for="customer_address">Address</label>
-                        <input type="text" id="customer_address" name="customer_address" class="form-control"value="{{ old('customer_address', $invoice->customer->address ?? '') }}">
+                        <input type="text" id="customer_address" name="customer_address" class="form-control"
+                            value="{{ $invoice->customer->address ?? '' }}">
                     </div>
                 </div>
             </div>
 
-            <!-- Invoice Items -->
+            <!-- Product Selection -->
             <div class="form-card">
                 <div class="section-header-form">
                     <span class="material-symbols-rounded">shopping_cart</span>
-                    <h3>Invoice Items</h3>
-                    <button type="button" class="btn-primary-sm" onclick="addInvoiceRow()">
+                    <h3>Select Products</h3>
+                    <button type="button" class="btn-primary-sm" onclick="showProductModal()">
                         <span class="material-symbols-rounded">add</span>
-                        Add Item
+                        Add Product
                     </button>
                 </div>
 
-                <div class="invoice-items-table">
-                    <table class="items-table" id="itemsTable">
+                <!-- Selected Products Table -->
+                <div class="selected-products-table">
+                    <table class="items-table" id="selectedProductsTable">
                         <thead>
                             <tr>
-                                <th style="width: 35%;">Product/Service</th>
-                                <th style="width: 10%;">Qty</th>
-                                <th style="width: 15%;">Price</th>
-                                <th style="width: 15%;">Discount</th>
-                                <th style="width: 15%;">Subtotal</th>
-                                <th style="width: 10%;">Action</th>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>In Stock</th>
+                                <th>Quantity</th>
+                                <th>Subtotal</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody id="itemsTableBody">
-                            @foreach($invoice->items as $index => $item)
-                                <tr class="item-row">
-                                    <td>
-                                        <input type="text" name="products[{{ $index }}][name]"
-                                            class="form-control item-name" value="{{ $item->product }}" required>
-                                    </td>
-                                    <td>
-                                        <input type="number" name="products[{{ $index }}][qty]"
-                                            class="form-control item-qty" value="{{ $item->qty }}" min="1" required
-                                            onchange="calculateRow(this)">
-                                    </td>
-                                    <td>
-                                        <input type="number" name="products[{{ $index }}][price]"
-                                            class="form-control item-price" value="{{ $item->price }}" step="0.01" min="0"
-                                            required onchange="calculateRow(this)">
-                                    </td>
-                                    <td>
-                                        <input type="text" name="products[{{ $index }}][discount]"
-                                            class="form-control item-discount" value="{{ $item->discount }}"
-                                            placeholder="0 or 10%" onchange="calculateRow(this)">
-                                    </td>
-                                    <td>
-                                        <input type="number" name="products[{{ $index }}][subtotal]"
-                                            class="form-control item-subtotal" value="{{ $item->subtotal }}" step="0.01"
-                                            readonly>
-                                    </td>
-                                    <td>
-                                        <button type="button" class="action-btn delete-sm" onclick="removeInvoiceRow(this)"
-                                            title="Remove">
-                                            <span class="material-symbols-rounded">close</span>
-                                        </button>
-                                    </td>
-                                </tr>
-                            @endforeach
+                        <tbody id="selectedProductsBody">
+                            <!-- Products will be loaded from existing invoice items -->
                         </tbody>
                     </table>
                 </div>
             </div>
+
             <!-- Invoice Totals -->
             <div class="invoice-totals-card">
                 <div class="totals-left">
@@ -189,28 +161,48 @@
                 <div class="totals-right">
                     <div class="total-row">
                         <label>Subtotal:</label>
-                        <input type="number" id="subtotal" name="subtotal" class="total-input"
-                            value="{{ $invoice->subtotal }}" step="0.01" readonly>
+                        <span id="subtotalDisplay"
+                            class="total-amount">${{ number_format($invoice->subtotal, 2) }}</span>
+                        <input type="hidden" id="subtotal" name="subtotal" value="{{ $invoice->subtotal }}">
                     </div>
 
                     <div class="total-row">
                         <label>Discount:</label>
-                        <input type="number" id="discount" name="discount" class="total-input"
-                            value="{{ $invoice->discount }}" step="0.01" readonly>
+                        <div class="discount-input">
+                            <input type="number" id="discount_amount" name="discount_amount"
+                                class="total-input-editable" value="{{ $invoice->discount }}" min="0" step="0.01"
+                                onchange="calculateTotals()" style="width: 100px;">
+                            <select id="discount_type" name="discount_type" class="form-control"
+                                onchange="calculateTotals()" style="width: 100px; margin-left: 10px;">
+                                <option value="amount">$</option>
+                                <option value="percent">%</option>
+                            </select>
+                        </div>
                     </div>
 
                     <div class="total-row">
-                        <label>TAX/VAT (5%):</label>
-                        <input type="number" id="vat" name="vat" class="total-input" value="{{ $invoice->vat }}"
-                            step="0.01" readonly>
+                        <label>TAX/VAT:</label>
+                        <div class="tax-input">
+                            <input type="number" id="tax_rate" name="tax_rate" class="total-input-editable" value="0"
+                                min="0" step="0.01" onchange="calculateTotals()" style="width: 80px;">
+                            <span style="margin: 0 5px;">%</span>
+                            <span id="taxAmountDisplay"
+                                class="total-amount">${{ number_format($invoice->vat, 2) }}</span>
+                            <input type="hidden" id="tax_amount" name="tax_amount" value="{{ $invoice->vat }}">
+                        </div>
                     </div>
 
                     <div class="total-row grand-total">
                         <label>Total:</label>
-                        <input type="number" id="total" name="total" class="total-input" value="{{ $invoice->total }}"
-                            step="0.01" readonly>
+                        <span id="totalDisplay" class="total-amount">${{ number_format($invoice->total, 2) }}</span>
+                        <input type="hidden" id="total" name="total" value="{{ $invoice->total }}">
                     </div>
                 </div>
+            </div>
+
+            <!-- Hidden fields for selected products -->
+            <div id="productFields">
+                <!-- Existing invoice items will be loaded here -->
             </div>
 
             <!-- Form Actions -->
@@ -236,8 +228,7 @@
             <div class="modal-body">
                 <div class="search-box" style="margin-bottom: 20px;">
                     <span class="material-symbols-rounded">search</span>
-                    <input type="text" id="customerSearch" placeholder="Search customers..."
-                        onkeyup="filterCustomers()">
+                    <input type="text" id="customerSearch" placeholder="Search customers" onkeyup="filterCustomers()">
                 </div>
 
                 <table class="data-table" id="customerSelectTable">
@@ -253,7 +244,7 @@
                         @foreach($customers as $customer)
                             <tr class="customer-row">
                                 <td>{{ $customer->name }}</td>
-                                <td>{{ $customer->email }}</td>
+                                <td>{{ $customer->email ?: 'N/A'}}</td>
                                 <td>{{ $customer->phone }}</td>
                                 <td>
                                     <button type="button" class="btn-primary-sm" onclick='selectCustomer(@json($customer))'>
@@ -267,4 +258,64 @@
             </div>
         </div>
     </div>
+
+    <!-- Product Selection Modal -->
+    <div id="productModal" class="modal" style="display:none;">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="modal-header">
+                <h3>Select Products from Inventory</h3>
+                <button type="button" class="modal-close" onclick="closeProductModal()">
+                    <span class="material-symbols-rounded">close</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="search-box" style="margin-bottom: 20px;">
+                    <span class="material-symbols-rounded">search</span>
+                    <input type="text" id="productSearch" placeholder="Search products" onkeyup="filterProducts()">
+                </div>
+
+                <table class="data-table" id="productSelectTable">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>In Stock</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($products as $product)
+                            <tr class="product-row">
+                                <td>
+                                    <strong>{{ $product->product_name }}</strong>
+                                    @if($product->product_desc)
+                                        <small class="text-muted">{{ Str::limit($product->product_desc, 50) }}</small>
+                                    @endif
+                                </td>
+                                <td>{{ $product->category->name ?? 'N/A' }}</td>
+                                <td>${{ number_format($product->product_price, 2) }}</td>
+                                <td>
+                                    <span
+                                        class="stock-badge @if($product->quantity == 0) out-of-stock @elseif($product->quantity <= 5) low-stock @endif">
+                                        {{ $product->quantity }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn-primary-sm" onclick='selectProduct(@json($product))'>
+                                        Add
+                                    </button>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </x-layout>
+
+<script>
+    window.invoiceItems = @json($invoice->items);
+    window.availableProducts = @json($products);
+</script>

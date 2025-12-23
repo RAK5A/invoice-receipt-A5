@@ -27,8 +27,7 @@
                         </label>
                         <input type="text" id="product_name" name="product_name"
                             class="form-control @error('product_name') is-invalid @enderror"
-                            value="{{ old('product_name') }}" 
-                            required placeholder="Enter product name">
+                            value="{{ old('product_name') }}" required placeholder="Enter product name">
                         @error('product_name')
                             <span class="error-message">{{ $message }}</span>
                         @enderror
@@ -64,6 +63,32 @@
                         @error('product_desc')
                             <span class="error-message">{{ $message }}</span>
                         @enderror
+                    </div>
+
+                    <!-- Category Dropdown -->
+                    <div class="form-group">
+                        <label for="category_id">
+                            <span class="material-symbols-rounded">category</span>
+                            Category
+                            <span class="required">*</span>
+                        </label>
+                        <select name="category_id" id="category_id" class="form-control" required>
+                            <option value="">Select Category</option>
+                            @foreach($categories as $category)
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- Quantity Field -->
+                    <div class="form-group">
+                        <label for="quantity">
+                            <span class="material-symbols-rounded">shelf_position</span>
+                            Quantity in Stock
+                            <span class="required">*</span>
+                        </label>
+                        <input type="number" name="quantity" id="quantity" class="form-control" min="0" value="0"
+                            required>
                     </div>
                 </div>
 

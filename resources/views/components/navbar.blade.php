@@ -61,6 +61,29 @@
                 </ul>
             </li>
 
+            {{-- Categories Dropdown --}}
+            <li class="nav-item dropdown-container">
+                <a href="#" class="nav-link dropdown-toggle">
+                    <span class="material-symbols-rounded">category</span>
+                    <span class="nav-label">Categories</span>
+                    <span class="dropdown-icon material-symbols-rounded">keyboard_arrow_down</span>
+                </a>
+
+                <ul class="dropdown-menu">
+                    <li class="nav-item"><a class="nav-link dropdown-title">Categories</a></li>
+                    <li class="nav-item">
+                        <a href="{{ route('categories.create') }}" class="nav-link dropdown-link">
+                            <span class="material-symbols-rounded">add</span>Add Category
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('categories.index') }}" class="nav-link dropdown-link">
+                            <span class="material-symbols-rounded">settings</span>Manage Categories
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
             <!-- Products Dropdown -->
             <li class="nav-item dropdown-container">
                 <a href="#" class="nav-link dropdown-toggle">
@@ -78,7 +101,7 @@
                     </li>
                     <li class="nav-item">
                         <a href="{{ route('products.index') }}" class="nav-link dropdown-link">
-                            <span class="material-symbols-rounded">settings</span>Manage Products
+                            <span class="material-symbols-rounded">box_edit</span>Manage Products
                         </a>
                     </li>
                 </ul>
@@ -107,28 +130,30 @@
                 </ul>
             </li>
 
-            <!-- Users Dropdown -->
-            <li class="nav-item dropdown-container">
-                <a href="#" class="nav-link dropdown-toggle">
-                    <span class="material-symbols-rounded">admin_panel_settings</span>
-                    <span class="nav-label">Users</span>
-                    <span class="dropdown-icon material-symbols-rounded">keyboard_arrow_down</span>
-                </a>
+            @if (auth()->user()->isAdmin())
+                <!-- Users Dropdown -->
+                <li class="nav-item dropdown-container">
+                    <a href="#" class="nav-link dropdown-toggle">
+                        <span class="material-symbols-rounded">admin_panel_settings</span>
+                        <span class="nav-label">Users</span>
+                        <span class="dropdown-icon material-symbols-rounded">keyboard_arrow_down</span>
+                    </a>
 
-                <ul class="dropdown-menu">
-                    <li class="nav-item"><a class="nav-link dropdown-title">System Users</a></li>
-                    <li class="nav-item">
-                        <a href="{{ route('users.create') }}" class="nav-link dropdown-link">
-                            <span class="material-symbols-rounded">person_add</span>Add User
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ route('users.index') }}" class="nav-link dropdown-link">
-                            <span class="material-symbols-rounded">manage_accounts</span>Manage Users
-                        </a>
-                    </li>
-                </ul>
-            </li>
+                    <ul class="dropdown-menu">
+                        <li class="nav-item"><a class="nav-link dropdown-title">System Users</a></li>
+                        <li class="nav-item">
+                            <a href="{{ route('users.create') }}" class="nav-link dropdown-link">
+                                <span class="material-symbols-rounded">person_add</span>Add User
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('users.index') }}" class="nav-link dropdown-link">
+                                <span class="material-symbols-rounded">manage_accounts</span>Manage Users
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            @endif
         </ul>
 
         <!-- Secondary Nav (Bottom) -->

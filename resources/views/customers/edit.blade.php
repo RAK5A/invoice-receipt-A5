@@ -1,4 +1,4 @@
-<x-layout title="Edit Customer - Invoice System">
+<x-layout title="Edit Customer - Invoice System" :navbar="true">
     <div class="page-container">
         <!-- Page Header -->
         <div class="page-header">
@@ -48,7 +48,7 @@
                         </label>
                         <input type="email" id="email" name="email"
                             class="form-control @error('email') is-invalid @enderror"
-                            value="{{ old('email', $customer->email) }}" required placeholder="customer@example.com">
+                            value="{{ old('email', $customer->email) }}" placeholder="customer@example.com">
                         @error('email')
                             <span class="error-message">{{ $message }}</span>
                         @enderror

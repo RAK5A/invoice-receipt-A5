@@ -1,4 +1,4 @@
-<x-layout title="Users - Invoice System">
+<x-layout title="Users - Invoice System" :navbar="true">
     <div class="page-container">
         <!-- Page Header -->
         <div class="page-header">
@@ -43,7 +43,7 @@
                 <h2>All Users</h2>
                 <div class="search-box">
                     <span class="material-symbols-rounded">search</span>
-                    <input type="text" id="searchInput" placeholder="Search users..." onkeyup="searchTable()">
+                    <input type="text" id="searchInput" placeholder="Search users">
                 </div>
             </div>
 
@@ -57,7 +57,8 @@
                                 <th>Username</th>
                                 <th>Email</th>
                                 <th>Phone</th>
-                                <th>Created</th>
+                                <th>Role</th>
+                                {{-- <th>Created</th> --}}
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -79,22 +80,20 @@
                                     <td>{{ $user->username }}</td>
                                     <td>{{ $user->email }}</td>
                                     <td>{{ $user->phone ?? 'N/A' }}</td>
-                                    <td>{{ $user->created_at->format('M d, Y') }}</td>
+                                    <td>{{ $user->role }}</td>
+                                    {{-- <td>{{ $user->created_at->format('M d, Y') }}</td> --}}
                                     <td>
                                         <div class="action-buttons">
                                             <a href="{{ route('users.edit', $user->id) }}" class="action-btn edit" title="Edit">
                                                 <span class="material-symbols-rounded">edit</span>
                                             </a>
                                             @if($user->id !== auth()->id())
-                                                <form action="{{ route('users.destroy', $user->id) }}" method="POST"
-                                                    class="delete-form"
-                                                    onsubmit="return confirm('Are you sure you want to delete this user?')">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="action-btn delete" title="Delete">
-                                                        <span class="material-symbols-rounded">delete</span>
-                                                    </button>
-                                                </form>
+                                                <button type="button" class="action-btn delete"
+                                                    onclick="showDeleteModal('{{ route('users.destroy', $user->id) }}', 
+                                                    'Delete user &quot;{{ $user->name }}&quot;? All their data will be removed.')"
+                                                    title="Delete">
+                                                    <span class="material-symbols-rounded">delete</span>
+                                                </button>
                                             @else
                                                 <button class="action-btn delete" disabled title="Cannot delete yourself"
                                                     style="opacity: 0.5; cursor: not-allowed;">
@@ -122,23 +121,5 @@
             </div>
         </div>
     </div>
-
-    <script>
-        // Search Table Function
-        function searchTable() {
-            const input = document.getElementById('searchInput');
-            const filter = input.value.toUpperCase();
-            const table = document.getElementById('usersTable');
-            const tr = table.getElementsByTagName('tr');
-
-            for (let i = 1; i < tr.length; i++) {
-                let txtValue = tr[i].textContent || tr[i].innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                    tr[i].style.display = '';
-                } else {
-                    tr[i].style.display = 'none';
-                }
-            }
-        }
-    </script>
 </x-layout>
+<x-delete-modal></x-delete-modal>

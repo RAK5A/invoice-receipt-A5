@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InvoiceController;
@@ -10,11 +11,6 @@ use Illuminate\Support\Facades\Route;
 // Route::get('/', function () {
 //     return view('welcome');
 // });
-
-// Product route model binding
-Route::bind('product', function ($value) {
-    return \App\Models\Product::where('product_id', $value)->firstOrFail();
-});
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -48,16 +44,22 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/{invoice}', [InvoiceController::class, 'update'])->name('invoices.update');
         Route::delete('/{invoice}', [InvoiceController::class, 'destroy'])->name('invoices.destroy');
         Route::get('/download-csv', [InvoiceController::class, 'downloadCsv'])->name('invoices.download-csv');
-        Route::post('/{invoice}/email', [InvoiceController::class, 'sendEmail'])->name('invoices.send-email');
+        // Route::post('/{invoice}/email', [InvoiceController::class, 'sendEmail'])->name('invoices.send-email');
         Route::get('/{invoice}/pdf', [InvoiceController::class, 'generatePdf'])->name('invoices.pdf');
     });
 
     // Products
     Route::resource('products', ProductController::class);
+    Route::get('/products/category/{categoryID}', [ProductController::class, 'getByCategory'])->name('products.by-category');
 
+    // Categories
+    Route::resource('categories', CategoryController::class);
+    
     // Customers
     Route::resource('customers', CustomerController::class);
 
-    // Users
-    Route::resource('users', UserController::class);
+    // Users (Admin Only)
+    Route::middleware('admin')->group(function () {
+        Route::resource('users', UserController::class);
+    });
 });
