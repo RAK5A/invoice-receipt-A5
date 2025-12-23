@@ -8,7 +8,7 @@
 4. select -> mysql
 5. select -> no
 6. select -> no
-
+   
 > [!IMPORTANT]
 > Start from here 
 
@@ -21,16 +21,21 @@
     or
     `php artisan migrate:fresh --seeder`
 12. - setup Fortify:
-      `composer require laravel/fortify`
+    ```composer require laravel/fortify```
     - and migrate again:
-      `php artisan migrate`
-      or
-      `php artisan migrate:fresh --seeder` (migrate and seed data at the same time)
+    ```php artisan migrate```
+    or
+    ```php artisan migrate:fresh --seeder``` (migrate and seed data at the same time)
+12. setup Dompdf (for downloading the pdf):
+    ```composer require barryvdh/laravel-dompdf```
+13. run: ```php artisan serve```
 
 > [!NOTE]
 > Before running the file user MUST enter this `php artisan key:generate` inorder to run without error
 
 13. - setup Dompdf (for downloading the pdf):
-      `composer require barryvdh/laravel-dompdf`
-1.  - run:
-      `php artisan serve`
+    ```composer require barryvdh/laravel-dompdf```
+    - after that run:
+    ```php artisan vendor:publish --provider="Barryvdh\DomPDF\ServiceProvider"```
+1. - run:
+    ```php artisan serve```
