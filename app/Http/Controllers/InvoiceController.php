@@ -34,7 +34,11 @@ class InvoiceController extends Controller
         $lastInvoice = Invoice::orderBy('invoice', 'desc')->first();
         $nextInvoiceNumber = $lastInvoice ? (int) $lastInvoice->invoice + 1 : 1;
 
-        $products = Product::all();
+        // $products = Product::all();
+        $products = Product::with('category')
+            ->where('quantity', '>', 0)  // Optional: only show in-stock items
+            ->orderBy('product_name')
+            ->get();
         $customers = StoreCustomer::all();
 
         return view('invoices.create', compact('nextInvoiceNumber', 'products', 'customers'));
@@ -69,7 +73,6 @@ class InvoiceController extends Controller
             // Invoice totals
             'subtotal' => 'required|numeric|min:0',
             'discount' => 'nullable|numeric|min:0',
-            'shipping' => 'nullable|numeric|min:0',
             'vat' => 'nullable|numeric|min:0',
             'total' => 'required|numeric|min:0',
             'notes' => 'nullable|string',
@@ -86,13 +89,13 @@ class InvoiceController extends Controller
                 'invoice_date' => $validated['invoice_date'],
                 'invoice_due_date' => $validated['invoice_due_date'],
                 'subtotal' => $validated['subtotal'],
-                // 'shipping' => $validated['shipping'] ?? 0,
                 'discount' => $validated['discount'] ?? 0,
                 'vat' => $validated['vat'] ?? 0,
                 'total' => $validated['total'],
                 'notes' => $validated['notes'] ?? null,
                 'invoice_type' => $validated['invoice_type'],
                 'status' => $validated['invoice_status'],
+                'user_id' => auth()->id(),
             ]);
 
             // Create Customer
@@ -136,7 +139,8 @@ class InvoiceController extends Controller
     public function edit($id)
     {
         $invoice = Invoice::with(['customer', 'items'])->where('id', $id)->firstOrFail();
-        $products = Product::all();
+        // $products = Product::all();
+        $products = Product::with('category')->get();;
         $customers = StoreCustomer::all();
 
         return view('invoices.edit', compact('invoice', 'products', 'customers'));
@@ -280,7 +284,6 @@ class InvoiceController extends Controller
             fputcsv($handle, [
                 $invoice->invoice,
                 $invoice->customer->name ?? 'N/A',
-                $invoice->customer->email ?? 'N/A',
                 $invoice->invoice_date,
                 $invoice->invoice_due_date,
                 ucfirst($invoice->invoice_type),
@@ -302,11 +305,12 @@ class InvoiceController extends Controller
     public function generatePdf($id)
     {
         // return redirect()->back()->with('info', 'PDF generation coming soon!');
-        $invoice = Invoice::with(['customer', 'items'])->findOrFail($id);
-        
+        // $invoice = Invoice::with(['customer', 'items'])->findOrFail($id);
+        $invoice = Invoice::with(['customer', 'items', 'user'])->findOrFail($id);
+
         // Generate PDF
         $pdf = Pdf::loadView('invoices.pdf', compact('invoice'));
-        
+
         // Download PDF
         return $pdf->download('invoice-' . $invoice->invoice . '.pdf');
     }

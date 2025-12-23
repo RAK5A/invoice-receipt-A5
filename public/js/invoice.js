@@ -1,134 +1,195 @@
-// Row counter for dynamic invoice items
-let rowCounter = 1;
+let selectedProducts = [];
+let productRowCounter = 0;
 
-/**
- * Add new invoice item row
- */
-function addInvoiceRow() {
-    const tableBody = document.getElementById("itemsTableBody");
-    const newRow = document.createElement("tr");
-    newRow.className = "item-row";
-    newRow.innerHTML = `
-        <td>
-            <input type="text" name="products[${rowCounter}][name]" class="form-control item-name" placeholder="Product name" required>
-        </td>
-        <td>
-            <input type="number" name="products[${rowCounter}][qty]" class="form-control item-qty" value="1" min="1" required onchange="calculateRow(this)">
-        </td>
-        <td>
-            <input type="number" name="products[${rowCounter}][price]" class="form-control item-price" value="0.00" step="0.01" min="0" required onchange="calculateRow(this)">
-        </td>
-        <td>
-            <input type="text" name="products[${rowCounter}][discount]" class="form-control item-discount" placeholder="0 or 10%" onchange="calculateRow(this)">
-        </td>
-        <td>
-            <input type="number" name="products[${rowCounter}][subtotal]" class="form-control item-subtotal" value="0.00" step="0.01" readonly>
-        </td>
-        <td>
-            <button type="button" class="action-btn delete-sm" onclick="removeInvoiceRow(this)" title="Remove">
-                <span class="material-symbols-rounded">close</span>
-            </button>
-        </td>
-    `;
-    tableBody.appendChild(newRow);
-    rowCounter++;
+// Product Modal Functions
+function showProductModal() {
+    document.getElementById('productModal').style.display = 'flex';
 }
 
-/**
- * Remove invoice item row
- */
-function removeInvoiceRow(button) {
-    const row = button.closest(".item-row");
-    const tableBody = document.getElementById("itemsTableBody");
-
-    // Don't remove if it's the only row
-    if (tableBody.children.length > 1) {
-        row.remove();
-        calculateTotals();
-    } else {
-        alert("You must have at least one item!");
-    }
+function closeProductModal() {
+    document.getElementById('productModal').style.display = 'none';
 }
 
-/**
- * Calculate row subtotal
- */
-function calculateRow(element) {
-    const row = element.closest(".item-row");
-    const qty = parseFloat(row.querySelector(".item-qty").value) || 0;
-    const price = parseFloat(row.querySelector(".item-price").value) || 0;
-    const discountInput = row.querySelector(".item-discount").value.trim();
+function filterProducts() {
+    const search = document.getElementById('productSearch').value.toLowerCase();
+    const rows = document.querySelectorAll('#productSelectTable .product-row');
+    
+    rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(search) ? '' : 'none';
+    });
+}
 
-    let subtotal = qty * price;
-    let discountAmount = 0;
-
-    // Calculate discount
-    if (discountInput) {
-        if (discountInput.includes("%")) {
-            // Percentage discount
-            const percentage = parseFloat(discountInput.replace("%", "")) || 0;
-            discountAmount = (subtotal * percentage) / 100;
+function selectProduct(product) {
+    // console.log('=== DEBUG: Product Data ===');
+    // console.log('Full product object:', product);
+    
+    const productId = typeof product.product_id === 'string' ? 
+                     parseInt(product.product_id, 10) : 
+                     Number(product.product_id);
+    
+    // console.log('Product ID from product_id:', productId, 'Type:', typeof productId);
+    
+    // Check current selected products
+    // console.log('Current selected IDs:', selectedProducts.map(p => ({
+    //     id: p.id, 
+    //     name: p.name
+    // })));
+    
+    // Find if product already exists
+    const existingIndex = selectedProducts.findIndex(p => {
+        return p.id === productId;
+    });
+    
+    console.log('Found at index:', existingIndex);
+    
+    if (existingIndex !== -1) {
+        // Product exists - increase quantity
+        const currentQuantity = selectedProducts[existingIndex].quantity;
+        const maxStock = selectedProducts[existingIndex].stock;
+        
+        if (currentQuantity < maxStock) {
+            updateProductQuantity(existingIndex, currentQuantity + 1);
+            closeProductModal();
+            return;
         } else {
-            // Fixed amount discount
-            discountAmount = parseFloat(discountInput) || 0;
+            alert(`Maximum stock reached (${maxStock} items)`);
+            return;
         }
     }
+    
+    // Add new product
+    selectedProducts.push({
+        id: productId, // Use product_id
+        name: product.product_name,
+        price: parseFloat(product.product_price),
+        stock: parseInt(product.quantity),
+        quantity: 1,
+        subtotal: parseFloat(product.product_price)
+    });
+    
+    // console.log('Added product. New list:', selectedProducts);
+    
+    // Update UI
+    renderSelectedProducts();
+    calculateTotals();
+    closeProductModal();
+}
 
-    subtotal -= discountAmount;
+function selectProductFromButton(button) {
+    const product = JSON.parse(button.getAttribute('data-product'));
+    selectProduct(product);
+}
 
-    // Update subtotal
-    row.querySelector(".item-subtotal").value = subtotal.toFixed(2);
-
-    // Recalculate totals
+function updateProductQuantity(index, quantity) {
+    if (quantity < 1) quantity = 1;
+    
+    // Check stock limit
+    const maxQuantity = selectedProducts[index].stock;
+    if (quantity > maxQuantity) {
+        alert(`Only ${maxQuantity} items available in stock.`);
+        quantity = maxQuantity;
+    }
+    
+    selectedProducts[index].quantity = quantity;
+    selectedProducts[index].subtotal = selectedProducts[index].price * quantity;
+    
+    renderSelectedProducts();
     calculateTotals();
 }
 
-/**
- * Calculate invoice totals
- */
-function calculateTotals() {
-    const rows = document.querySelectorAll(".item-row");
-    let subtotal = 0;
-    let totalDiscount = 0;
-
-    rows.forEach((row) => {
-        const qty = parseFloat(row.querySelector(".item-qty").value) || 0;
-        const price = parseFloat(row.querySelector(".item-price").value) || 0;
-        const discountInput = row.querySelector(".item-discount").value.trim();
-        const itemSubtotal =
-            parseFloat(row.querySelector(".item-subtotal").value) || 0;
-
-        const itemTotal = qty * price;
-        subtotal += itemTotal;
-
-        // Calculate discount amount
-        if (discountInput) {
-            if (discountInput.includes("%")) {
-                const percentage =
-                    parseFloat(discountInput.replace("%", "")) || 0;
-                totalDiscount += (itemTotal * percentage) / 100;
-            } else {
-                totalDiscount += parseFloat(discountInput) || 0;
-            }
-        }
-    });
-
-    const shipping = parseFloat(document.getElementById("shipping").value) || 0;
-    const subtotalAfterDiscount = subtotal - totalDiscount;
-
-    // Calculate VAT (10% of subtotal after discount)
-    const vat = subtotalAfterDiscount * 0.1;
-
-    // Calculate grand total
-    const grandTotal = subtotalAfterDiscount + shipping + vat;
-
-    // Update fields
-    document.getElementById("subtotal").value = subtotal.toFixed(2);
-    document.getElementById("discount").value = totalDiscount.toFixed(2);
-    document.getElementById("vat").value = vat.toFixed(2);
-    document.getElementById("total").value = grandTotal.toFixed(2);
+function removeProduct(index) {
+    selectedProducts.splice(index, 1);
+    renderSelectedProducts();
+    calculateTotals();
 }
 
+function renderSelectedProducts() {
+    const tbody = document.getElementById('selectedProductsBody');
+    const productFields = document.getElementById('productFields');
+    
+    // Clear existing
+    tbody.innerHTML = '';
+    productFields.innerHTML = '';
+    
+    // Render each product
+    selectedProducts.forEach((product, index) => {
+        // Add to table (keep your existing table HTML)
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>
+                <strong>${product.name}</strong>
+            </td>
+            <td>$${product.price.toFixed(2)}</td>
+            <td>
+                <span class="stock-badge ${product.stock <= 5 ? 'low-stock' : ''}">
+                    ${product.stock}
+                </span>
+            </td>
+            <td>
+                <input type="number" 
+                    class="form-control quantity-input" 
+                    value="${product.quantity}" 
+                    min="1" 
+                    max="${product.stock}"
+                    onchange="updateProductQuantity(${index}, this.value)">
+            </td>
+            <td>$${product.subtotal.toFixed(2)}</td>
+            <td>
+                <button type="button" class="action-btn delete-sm" onclick="removeProduct(${index})" title="Remove">
+                    <span class="material-symbols-rounded">close</span>
+                </button>
+            </td>
+        `;
+        tbody.appendChild(row);
+        
+        // FIXED: Update hidden fields to match controller validation
+        productFields.innerHTML += `
+            <input type="hidden" name="products[${index}][name]" value="${product.name}">
+            <input type="hidden" name="products[${index}][qty]" value="${product.quantity}">
+            <input type="hidden" name="products[${index}][price]" value="${product.price}">
+            <input type="hidden" name="products[${index}][subtotal]" value="${product.subtotal}">
+            <!-- Keep product_id for reference if needed -->
+            <input type="hidden" name="products[${index}][product_id]" value="${product.id}">
+        `;
+    });
+    
+    // If no products, show message
+    if (selectedProducts.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="6" class="text-center text-muted py-4">
+                    No products selected. Please add products to the invoice.
+                </td>
+            </tr>
+        `;
+    }
+}
+
+function calculateTotals() {
+    // Calculate subtotal from selected products
+    let subtotal = selectedProducts.reduce((sum, product) => sum + product.subtotal, 0);
+    
+    // Calculate discount
+    const discountAmount = parseFloat(document.getElementById('discount_amount').value) || 0;
+    const discountType = document.getElementById('discount_type').value;
+    let discount = discountType === 'percent' ? (subtotal * discountAmount / 100) : discountAmount;
+    
+    // Calculate tax
+    const taxRate = parseFloat(document.getElementById('tax_rate').value) || 0;
+    const taxableAmount = subtotal - discount;
+    const taxAmount = taxableAmount * taxRate / 100;
+    
+    const total = taxableAmount + taxAmount;
+    
+    // Update displays
+    document.getElementById('subtotalDisplay').textContent = '$' + subtotal.toFixed(2);
+    document.getElementById('subtotal').value = subtotal.toFixed(2);
+    document.getElementById('taxAmountDisplay').textContent = '$' + taxAmount.toFixed(2);
+    document.getElementById('tax_amount').value = taxAmount.toFixed(2);
+    document.getElementById('totalDisplay').textContent = '$' + total.toFixed(2);
+    document.getElementById('total').value = total.toFixed(2);
+}
 
 /**
  * Show customer selection modal
@@ -184,23 +245,26 @@ window.onclick = function (event) {
     }
 };
 
-// Initialize calculations on page load
-document.addEventListener("DOMContentLoaded", function () {
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    // Clear selectedProducts array first
+    selectedProducts = [];
+    
+    // Check if we have invoice items from Blade
+    if (window.invoiceItems && window.invoiceItems.length > 0) {
+        window.invoiceItems.forEach(function(item) {
+            selectedProducts.push({
+                id: item.product_id || 0,
+                name: item.product,
+                price: parseFloat(item.price),
+                stock: window.availableProducts.find(p => p.id == item.product_id)?.quantity || 0,
+                quantity: parseInt(item.qty),
+                subtotal: parseFloat(item.subtotal)
+            });
+        });
+        // console.log('Loaded', selectedProducts.length, 'items from invoice');
+    }
+
+    renderSelectedProducts();
     calculateTotals();
 });
-
-function searchTable() {
-    const input = document.getElementById("searchInput");
-    const filter = input.value.toUpperCase();
-    const table = document.getElementById("invoicesTable");
-    const tr = table.getElementsByTagName("tr");
-
-    for (let i = 1; i < tr.length; i++) {
-        let txtValue = tr[i].textContent || tr[i].innerText;
-        if (txtValue.toUpperCase().indexOf(filter) > -1) {
-            tr[i].style.display = "";
-        } else {
-            tr[i].style.display = "none";
-        }
-    }
-}

@@ -1,4 +1,4 @@
-<x-layout title="Edit Product - Invoice System">
+<x-layout title="Edit Product - Invoice System" :navbar="true">
     <div class="page-container">
         <!-- Page Header -->
         <div class="page-header">
@@ -66,6 +66,34 @@
                         @error('product_desc')
                             <span class="error-message">{{ $message }}</span>
                         @enderror
+                    </div>
+
+                    <!-- Category Dropdown -->
+                    <div class="form-group">
+                        <label for="category_id">
+                            <span class="material-symbols-rounded">category</span>
+                            Category
+                            <span class="required">*</span>
+                        </label>
+                        <select name="category_id" id="category_id" class="form-control" required>
+                            <option value="">Select Category</option>
+                            @foreach($categories as $category)
+                                <option value="{{ $category->id }}" {{ old('category_id', $product->category_id ?? '') == $category->id ? 'selected' : '' }}>
+                                    {{ $category->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- Quantity Field -->
+                    <div class="form-group">
+                        <label for="quantity">
+                            <span class="material-symbols-rounded">shelf_position</span>
+                            Quantity in Stock
+                            <span class="required">*</span>
+                        </label>
+                        <input type="number" name="quantity" id="quantity" class="form-control" min="0" value="{{ old('quantity', $product->quantity) }}"
+                            required>
                     </div>
                 </div>
 

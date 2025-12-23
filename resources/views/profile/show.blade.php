@@ -1,4 +1,4 @@
-<x-layout title="Profile - Invoice System">
+<x-layout title="Profile - Invoice System" :navbar="true">
     <div class="page-container">
         <!-- Page Header -->
         <div class="page-header">
@@ -12,31 +12,35 @@
         <div class="profile-container">
             <div class="profile-card">
                 <div class="profile-avatar-large">
-                    {{-- {{ strtoupper(substr(Auth::user()->name, 0, 2)) }} --}}
                     {{ strtoupper(substr( auth()->user()->name, 0, 2)) }}
                 </div>
-
+                
                 <div class="profile-info">
-                    {{-- <h2>{{ Auth::user()->name }}</h2> --}}
                     <h2>{{ auth()->user()->name }}</h2>
                     <p class="profile-role">System Administrator</p>
                 </div>
-
+                
                 <div class="profile-details">
                     <div class="detail-item">
-                        <span class="material-symbols-rounded">person</span>
+                        <span class="material-symbols-rounded">badge</span>
                         <div>
-                            <label>Username</label>
-                            {{-- <p>{{ Auth::user()->username }}</p> --}}
-                            <p>{{ auth()->user()->username }}</p>
+                            <label>Full Name</label>
+                            <p>{{ auth()->user()->name }}</p>
                         </div>
                     </div>
 
                     <div class="detail-item">
+                        <span class="material-symbols-rounded">person</span>
+                        <div>
+                            <label>Username</label>
+                            <p>{{ auth()->user()->username }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="detail-item">
                         <span class="material-symbols-rounded">mail</span>
                         <div>
                             <label>Email</label>
-                            {{-- <p>{{ Auth::user()->email }}</p> --}}
                             <p>{{ auth()->user()->email }}</p>
                         </div>
                     </div>
@@ -45,8 +49,15 @@
                         <span class="material-symbols-rounded">phone</span>
                         <div>
                             <label>Phone</label>
-                            {{-- <p>{{ Auth::user()->phone ?? 'Not provided' }}</p> --}}
-                            <p>{{ auth()->user()->phone ?? 'Not provided' }}</p>
+                            <p>{{ auth()->user()->phone ?? 'N/A' }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <span class="material-symbols-rounded">admin_panel_settings</span>
+                        <div>
+                            <label>Role</label>
+                            <p>{{ ucfirst(auth()->user()->role) }}</p>
                         </div>
                     </div>
 
@@ -54,19 +65,19 @@
                         <span class="material-symbols-rounded">calendar_today</span>
                         <div>
                             <label>Member Since</label>
-                            {{-- <p>{{ Auth::user()->created_at->format('F d, Y') }}</p> --}}
                             <p>{{ auth()->user()->created_at->format('F d, Y') }}</p>
                         </div>
                     </div>
                 </div>
 
+                @if (auth()->user()->isAdmin())
                 <div class="profile-actions">
-                    {{-- <a href="{{ route('users.edit', Auth::user()->id) }}" class="btn-primary"> --}}
                     <a href="{{ route('users.edit', auth()->user()->id) }}" class="btn-primary">
                         <span class="material-symbols-rounded">edit</span>
                         Edit Profile
                     </a>
                 </div>
+                @endif
             </div>
         </div>
     </div>

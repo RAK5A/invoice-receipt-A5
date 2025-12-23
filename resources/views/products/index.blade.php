@@ -1,4 +1,4 @@
-<x-layout title="Products - Invoice System">
+<x-layout title="Products - Invoice System" :navbar="true">
     <div class="page-container">
         <!-- Page Header -->
         <div class="page-header">
@@ -31,7 +31,7 @@
                 <h2>All Products</h2>
                 <div class="search-box">
                     <span class="material-symbols-rounded">search</span>
-                    <input type="text" id="searchInput" placeholder="Search products..." onkeyup="searchTable()">
+                    <input type="text" id="searchInput" placeholder="Search products">
                 </div>
             </div>
 
@@ -42,9 +42,10 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Product Name</th>
-                                <th>Description</th>
                                 <th>Price</th>
-                                <th>Created</th>
+                                <th>Quantity</th>
+                                <th>Description</th>
+                                {{-- <th>Created</th> --}}
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -53,9 +54,10 @@
                                 <tr>
                                     <td><strong>#{{ $product->product_id }}</strong></td>
                                     <td>{{ $product->product_name }}</td>
-                                    <td>{{ Str::limit($product->product_desc, 50) }}</td>
                                     <td><strong>${{ number_format($product->product_price, 2) }}</strong></td>
-                                    <td>{{ $product->created_at->format('M d, Y') }}</td>
+                                    <td>{{ number_format($product->quantity) }}</td>
+                                    <td>{{ $product->product_desc ? Str::limit($product->product_desc, 50) : 'N/A' }}</td>
+                                    {{-- <td>{{ $product->created_at->format('M d, Y') }}</td> --}}
                                     <td>
                                         <div class="action-buttons">
                                             <a href="{{ route('products.edit', $product->product_id) }}" class="action-btn edit"
@@ -67,7 +69,10 @@
                                                 onsubmit="return confirm('Are you sure you want to delete this product?')">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="action-btn delete" title="Delete">
+                                                <button type="button" class="action-btn delete"
+                                                    onclick="showDeleteModal('{{ route('products.destroy', $product->product_id) }}', 
+                                                    'Are you sure you want to delete the product &quot;{{ $product->product_name }}&quot;? This action cannot be undone.')"
+                                                    title="Delete">
                                                     <span class="material-symbols-rounded">delete</span>
                                                 </button>
                                             </form>
@@ -92,29 +97,5 @@
             </div>
         </div>
     </div>
-
-    <script>
-        // Search Table Function
-        function searchTable(tableId) {
-            const input = document.getElementById('searchInput');
-            const filter = input.value.toUpperCase();
-            const table = document.getElementById(tableId);
-
-            if (!table) {
-                console.error(`Table with ID "${tableId}" not found`);
-                return;
-            }
-
-            const tr = table.getElementsByTagName('tr');
-
-            for (let i = 1; i < tr.length; i++) {
-                let txtValue = tr[i].textContent || tr[i].innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                    tr[i].style.display = '';
-                } else {
-                    tr[i].style.display = 'none';
-                }
-            }
-        }
-    </script>
 </x-layout>
+<x-delete-modal></x-delete-modal>

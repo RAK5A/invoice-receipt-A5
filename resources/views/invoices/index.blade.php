@@ -1,4 +1,4 @@
-<x-layout title="Invoices - Invoice System">
+<x-layout title="Invoices - Invoice System" :navbar="true">
     <div class="page-container">
         <!-- Page Header -->
         <div class="page-header">
@@ -113,7 +113,7 @@
                                                 title="View PDF" target="_blank">
                                                 <span class="material-symbols-rounded">picture_as_pdf</span>
                                             </a>
-                                            <form action="{{ route('invoices.destroy', $invoice->id) }}" method="POST"
+                                            {{-- <form action="{{ route('invoices.destroy', $invoice->id) }}" method="POST"
                                                 class="delete-form"
                                                 onsubmit="return confirm('Are you sure you want to delete this invoice?')">
                                                 @csrf
@@ -121,7 +121,13 @@
                                                 <button type="submit" class="action-btn delete" title="Delete">
                                                     <span class="material-symbols-rounded">delete</span>
                                                 </button>
-                                            </form>
+                                            </form> --}}
+                                            <button type="button" class="action-btn delete"
+                                                onclick="showDeleteModal('{{ route('invoices.destroy', $invoice->id) }}', 
+                                                'Are you sure you want to delete invoice &quot;#{{ $invoice->invoice }}&quot;? This action cannot be undone.')"
+                                                title="Delete">
+                                                <span class="material-symbols-rounded">delete</span>
+                                            </button>
                                         </div>
                                     </td>
                                 </tr>
@@ -144,3 +150,4 @@
         </div>
     </div>
 </x-layout>
+<x-delete-modal />

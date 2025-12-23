@@ -1,4 +1,4 @@
-<x-layout title="Create Invoice - Invoice System">
+<x-layout title="Create Invoice - Invoice System" :navbar="true">
     <div class="page-container">
         <!-- Page Header -->
         <div class="page-header">
@@ -71,7 +71,8 @@
                             Due Date
                         </label>
                         <input type="date" id="invoice_due_date" name="invoice_due_date" class="form-control"
-                            value="{{ date('Y-m-d', strtotime('+1 week')) }}" required>
+                            value="{{ date('Y-m-d') }}" required>
+                        {{-- value="{{ date('Y-m-d', strtotime('+1 day')) }}" required> --}}
                     </div>
                 </div>
             </div>
@@ -110,63 +111,37 @@
                 </div>
             </div>
 
-            <!-- Invoice Items -->
+            <!-- Product Selection -->
             <div class="form-card">
                 <div class="section-header-form">
                     <span class="material-symbols-rounded">shopping_cart</span>
-                    <h3>Invoice Items</h3>
-                    <button type="button" class="btn-primary-sm" onclick="addInvoiceRow()">
+                    <h3>Select Products</h3>
+                    <button type="button" class="btn-primary-sm" onclick="showProductModal()">
                         <span class="material-symbols-rounded">add</span>
-                        Add Item
+                        Add Product
                     </button>
                 </div>
 
-                <div class="invoice-items-table">
-                    <table class="items-table" id="itemsTable">
+                <!-- Selected Products Table -->
+                <div class="selected-products-table">
+                    <table class="items-table" id="selectedProductsTable">
                         <thead>
                             <tr>
-                                <th style="width: 35%;">Product/Service</th>
-                                <th style="width: 10%;">Qty</th>
-                                <th style="width: 15%;">Price</th>
-                                <th style="width: 15%;">Discount</th>
-                                <th style="width: 15%;">Subtotal</th>
-                                <th style="width: 10%;">Action</th>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>In Stock</th>
+                                <th>Quantity</th>
+                                <th>Subtotal</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody id="itemsTableBody">
-                            <!-- Initial row -->
-                            <tr class="item-row">
-                                <td>
-                                    <input type="text" name="products[0][name]" class="form-control item-name"
-                                        placeholder="Product name" required>
-                                </td>
-                                <td>
-                                    <input type="number" name="products[0][qty]" class="form-control item-qty" value="1"
-                                        min="1" required onchange="calculateRow(this)">
-                                </td>
-                                <td>
-                                    <input type="number" name="products[0][price]" class="form-control item-price"
-                                        value="0.00" step="0.01" min="0" required onchange="calculateRow(this)">
-                                </td>
-                                <td>
-                                    <input type="text" name="products[0][discount]" class="form-control item-discount"
-                                        placeholder="0 or 10%" onchange="calculateRow(this)">
-                                </td>
-                                <td>
-                                    <input type="number" name="products[0][subtotal]" class="form-control item-subtotal"
-                                        value="0.00" step="0.01" readonly>
-                                </td>
-                                <td>
-                                    <button type="button" class="action-btn delete-sm" onclick="removeInvoiceRow(this)"
-                                        title="Remove">
-                                        <span class="material-symbols-rounded">close</span>
-                                    </button>
-                                </td>
-                            </tr>
+                        <tbody id="selectedProductsBody">
+                            <!-- Products will be added here dynamically -->
                         </tbody>
                     </table>
                 </div>
             </div>
+
             <!-- Invoice Totals -->
             <div class="invoice-totals-card">
                 <div class="totals-left">
@@ -180,34 +155,45 @@
                 <div class="totals-right">
                     <div class="total-row">
                         <label>Subtotal:</label>
-                        <input type="number" id="subtotal" name="subtotal" class="total-input" value="0.00" step="0.01"
-                            readonly>
+                        <span id="subtotalDisplay" class="total-amount">$0.00</span>
+                        <input type="hidden" id="subtotal" name="subtotal" value="0">
                     </div>
 
                     <div class="total-row">
                         <label>Discount:</label>
-                        <input type="number" id="discount" name="discount" class="total-input" value="0.00" step="0.01"
-                            readonly>
+                        <div class="discount-input">
+                            <input type="number" id="discount_amount" name="discount_amount"
+                                class="total-input-editable" value="0" min="0" step="0.01" onchange="calculateTotals()"
+                                style="width: 100px;">
+                            <select id="discount_type" name="discount_type" class="form-control"
+                                onchange="calculateTotals()" style="width: 100px; margin-left: 10px;">
+                                <option value="amount">$</option>
+                                <option value="percent">%</option>
+                            </select>
+                        </div>
                     </div>
 
                     <div class="total-row">
-                        <label>Shipping:</label>
-                        <input type="number" id="shipping" name="shipping" class="total-input-editable" value="0.00"
-                            step="0.01" min="0" onchange="calculateTotals()">
-                    </div>
-
-                    <div class="total-row">
-                        <label>TAX/VAT (5%):</label>
-                        <input type="number" id="vat" name="vat" class="total-input" value="0.00" step="0.01" readonly>
+                        <label>TAX/VAT:</label>
+                        <div class="tax-input">
+                            <input type="number" id="tax_rate" name="tax_rate" class="total-input-editable" value="0"
+                                min="0" step="0.01" onchange="calculateTotals()" style="width: 80px;">
+                            <span style="margin: 0 5px;">%</span>
+                            <span id="taxAmountDisplay" class="total-amount">$0.00</span>
+                            <input type="hidden" id="tax_amount" name="tax_amount" value="0">
+                        </div>
                     </div>
 
                     <div class="total-row grand-total">
                         <label>Total:</label>
-                        <input type="number" id="total" name="total" class="total-input" value="0.00" step="0.01"
-                            readonly>
+                        <span id="totalDisplay" class="total-amount">$0.00</span>
+                        <input type="hidden" id="total" name="total" value="0">
                     </div>
                 </div>
             </div>
+
+            <!-- Hidden fields for selected products -->
+            <div id="productFields"></div>
 
             <!-- Form Actions -->
             <div class="form-actions">
@@ -232,7 +218,7 @@
             <div class="modal-body">
                 <div class="search-box" style="margin-bottom: 20px;">
                     <span class="material-symbols-rounded">search</span>
-                    <input type="text" id="customerSearch" placeholder="Search customers..."
+                    <input type="text" id="customerSearch" placeholder="Search customers"
                         onkeyup="filterCustomers()">
                 </div>
 
@@ -249,11 +235,66 @@
                         @foreach($customers as $customer)
                             <tr class="customer-row">
                                 <td>{{ $customer->name }}</td>
-                                <td>{{ $customer->email }}</td>
+                                <td>{{ $customer->email ?: 'N/A'}}</td>
                                 <td>{{ $customer->phone }}</td>
                                 <td>
                                     <button type="button" class="btn-primary-sm" onclick='selectCustomer(@json($customer))'>
                                         Select
+                                    </button>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Selection Modal -->
+    <div id="productModal" class="modal" style="display:none;">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="modal-header">
+                <h3>Select Products from Inventory</h3>
+                <button type="button" class="modal-close" onclick="closeProductModal()">
+                    <span class="material-symbols-rounded">close</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="search-box" style="margin-bottom: 20px;">
+                    <span class="material-symbols-rounded">search</span>
+                    <input type="text" id="productSearch" placeholder="Search products" onkeyup="filterProducts()">
+                </div>
+
+                <table class="data-table" id="productSelectTable">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>In Stock</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($products as $product)
+                            <tr class="product-row">
+                                <td>
+                                    <strong>{{ $product->product_name }}</strong>
+                                    @if($product->product_desc)
+                                        <small class="text-muted">{{ Str::limit($product->product_desc, 50) }}</small>
+                                    @endif
+                                </td>
+                                <td>{{ $product->category->name ?? 'N/A' }}</td>
+                                <td>${{ number_format($product->product_price, 2) }}</td>
+                                <td>
+                                    <span
+                                        class="stock-badge @if($product->quantity == 0) out-of-stock @elseif($product->quantity <= 5) low-stock @endif">
+                                        {{ $product->quantity }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn-primary-sm" onclick='selectProduct(@json($product))'>
+                                        Add
                                     </button>
                                 </td>
                             </tr>
