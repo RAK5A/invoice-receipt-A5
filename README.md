@@ -37,5 +37,18 @@
     ```composer require barryvdh/laravel-dompdf```
     - after that run:
     ```php artisan vendor:publish --provider="Barryvdh\DomPDF\ServiceProvider"```
-1. - run:
+14. - run:
     ```php artisan serve```
+
+> [!NOTE]
+> Admin:
+> mail: admin@step.org
+> password: admin123
+
+> employee 1:
+> mail: employee1@step.org
+> password: employee123
+
+> employee 2:
+> mail: employee2@step.org
+> password: employee1234
