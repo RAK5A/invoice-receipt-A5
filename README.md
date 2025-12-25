@@ -42,20 +42,20 @@
 
 > [!NOTE]
 > Login for Admin, Employee
-```
 ### Admin:
+```
 - mail: admin@step.org
 - password: admin123
 ```
 
-```
 ### employee 1:
+```
 - mail: employee1@step.org
 - password: employee123
 ```
 
-```
 ### employee 2:
+```
 - mail: employee2@step.org
 - password: employee1234
 ```
