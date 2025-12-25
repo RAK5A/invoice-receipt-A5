@@ -30,13 +30,9 @@
     ```composer require barryvdh/laravel-dompdf```
 13. run: ```php artisan serve```
 
-> [!NOTE]
+> [!WARNING]
 > Before running the file user MUST enter this `php artisan key:generate` inorder to run without error
 
-13. - setup Dompdf (for downloading the pdf):
-    ```composer require barryvdh/laravel-dompdf```
-    - after that run:
-    ```php artisan vendor:publish --provider="Barryvdh\DomPDF\ServiceProvider"```
 14. - run:
     ```php artisan serve```
 
