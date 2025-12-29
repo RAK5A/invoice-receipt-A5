@@ -1,4 +1,4 @@
-<div id="deleteModal" class="modal" style="display: none;">
+<div id="deleteModal" class="modal">
     <div class="modal-overlay" onclick="closeDeleteModal()"></div>
     <div class="modal-dialog">
         <div class="modal-content delete-modal-content">

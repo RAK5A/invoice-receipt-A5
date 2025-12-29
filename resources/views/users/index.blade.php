@@ -95,8 +95,7 @@
                                                     <span class="material-symbols-rounded">delete</span>
                                                 </button>
                                             @else
-                                                <button class="action-btn delete" disabled title="Cannot delete yourself"
-                                                    style="opacity: 0.5; cursor: not-allowed;">
+                                                <button class="action-btn delete" disabled title="Cannot delete yourself">
                                                     <span class="material-symbols-rounded">delete</span>
                                                 </button>
                                             @endif

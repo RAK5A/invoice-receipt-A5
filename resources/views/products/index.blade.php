@@ -44,6 +44,7 @@
                                 <th>Product Name</th>
                                 <th>Price</th>
                                 <th>Quantity</th>
+                                <th>Type</th>
                                 <th>Description</th>
                                 {{-- <th>Created</th> --}}
                                 <th>Actions</th>
@@ -56,6 +57,7 @@
                                     <td>{{ $product->product_name }}</td>
                                     <td><strong>${{ number_format($product->product_price, 2) }}</strong></td>
                                     <td>{{ number_format($product->quantity) }}</td>
+                                    <td>{{ $product->category->name }}</td>
                                     <td>{{ $product->product_desc ? Str::limit($product->product_desc, 50) : 'N/A' }}</td>
                                     {{-- <td>{{ $product->created_at->format('M d, Y') }}</td> --}}
                                     <td>

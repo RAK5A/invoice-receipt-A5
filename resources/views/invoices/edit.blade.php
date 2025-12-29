@@ -171,9 +171,9 @@
                         <div class="discount-input">
                             <input type="number" id="discount_amount" name="discount_amount"
                                 class="total-input-editable" value="{{ $invoice->discount }}" min="0" step="0.01"
-                                onchange="calculateTotals()" style="width: 100px;">
+                                onchange="calculateTotals()">
                             <select id="discount_type" name="discount_type" class="form-control"
-                                onchange="calculateTotals()" style="width: 100px; margin-left: 10px;">
+                                onchange="calculateTotals()">
                                 <option value="amount">$</option>
                                 <option value="percent">%</option>
                             </select>
@@ -184,8 +184,8 @@
                         <label>TAX/VAT:</label>
                         <div class="tax-input">
                             <input type="number" id="tax_rate" name="tax_rate" class="total-input-editable" value="0"
-                                min="0" step="0.01" onchange="calculateTotals()" style="width: 80px;">
-                            <span style="margin: 0 5px;">%</span>
+                                min="0" step="0.01" onchange="calculateTotals()">
+                            <span>%</span>
                             <span id="taxAmountDisplay"
                                 class="total-amount">${{ number_format($invoice->vat, 2) }}</span>
                             <input type="hidden" id="tax_amount" name="tax_amount" value="{{ $invoice->vat }}">
@@ -217,7 +217,7 @@
     </div>
 
     <!-- Customer Selection Modal -->
-    <div id="customerModal" class="modal" style="display:none;">
+    <div id="customerModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h3>Select Customer</h3>
@@ -226,7 +226,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="search-box" style="margin-bottom: 20px;">
+                <div class="search-box">
                     <span class="material-symbols-rounded">search</span>
                     <input type="text" id="customerSearch" placeholder="Search customers" onkeyup="filterCustomers()">
                 </div>
@@ -260,8 +260,8 @@
     </div>
 
     <!-- Product Selection Modal -->
-    <div id="productModal" class="modal" style="display:none;">
-        <div class="modal-content" style="max-width: 800px;">
+    <div id="productModal" class="modal">
+        <div class="modal-content large">
             <div class="modal-header">
                 <h3>Select Products from Inventory</h3>
                 <button type="button" class="modal-close" onclick="closeProductModal()">
@@ -269,7 +269,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="search-box" style="margin-bottom: 20px;">
+                <div class="search-box">
                     <span class="material-symbols-rounded">search</span>
                     <input type="text" id="productSearch" placeholder="Search products" onkeyup="filterProducts()">
                 </div>
