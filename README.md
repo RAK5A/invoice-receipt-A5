@@ -28,7 +28,6 @@
     ```php artisan migrate:fresh --seeder``` (migrate and seed data at the same time)
 12. setup Dompdf (for downloading the pdf):
     ```composer require barryvdh/laravel-dompdf```
-13. run: ```php artisan serve```
 
 > [!WARNING]
 > Before running the file user MUST enter this `php artisan key:generate` inorder to run without error
@@ -38,7 +37,7 @@
 
 > [!NOTE]
 > user can login either email or username
-> Login for Admin, Employee
+> - Login for Admin, Employee
 ### Admin:
 ```
 - email: admin@step.org
