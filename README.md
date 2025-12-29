@@ -2,7 +2,7 @@
 
 ## Setup
 
-1. laravel new invoice-receipt
+1. `laravel new invoice-receipt`
 2. select -> none
 3. select -> 0
 4. select -> mysql
@@ -12,32 +12,37 @@
 > [!IMPORTANT]
 > Start from here 
 
-7. install composer:
+7. - install composer:
+   
     `composer install`
-8. `npm i` and `npm run build`
-9. config username, password, database name in .env
-10. `php artisan migrate`
-11. `php artisan db:seed` (seed data into database)
-    or
-    `php artisan migrate:fresh --seeder`
-12. - setup Fortify:
+   - setup Fortify:
+      
     ```composer require laravel/fortify```
-    - and migrate again:
-    ```php artisan migrate```
-    or
-    ```php artisan migrate:fresh --seeder``` (migrate and seed data at the same time)
-12. setup Dompdf (for downloading the pdf):
+
+   - setup Dompdf (for downloading the pdf):
+    
     ```composer require barryvdh/laravel-dompdf```
+8. `npm i` and `npm run build`
+9. config username, password, database name in `.env` file
+10. Migrate data into database [^1]:
+
+    `php artisan migrate`
+
+11. Seed data into database [^1]:
+    
+    `php artisan db:seed`
+[^1]: or migrate and seed data at the same time (NOT RECOMMENDED WITH DATA ALREADY EXISTED IN DATABASE): `php artisan migrate:fresh --seeder` 
 
 > [!WARNING]
-> Before running the file user MUST enter this `php artisan key:generate` inorder to run without error
+> Before running the project user MUST enter this `php artisan key:generate` inorder to run without error
 
-14. - run:
+12. run:
     ```php artisan serve```
 
 > [!NOTE]
-> user can login either email or username
-> - Login for Admin, Employee
+> Login for Admin, Employee[^2].
+
+[^2]: user can login neither with email or username BUT choose 1 only
 ### Admin:
 ```
 - email: admin@step.org
