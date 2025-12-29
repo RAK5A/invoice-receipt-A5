@@ -37,21 +37,25 @@
     ```php artisan serve```
 
 > [!NOTE]
+> user can login either email or username
 > Login for Admin, Employee
 ### Admin:
 ```
-- mail: admin@step.org
+- email: admin@step.org
+- username: admin
 - password: admin123
 ```
 
 ### employee 1:
 ```
-- mail: employee1@step.org
+- email: employee1@step.org
+- username: employee_1
 - password: employee123
 ```
 
 ### employee 2:
 ```
-- mail: employee2@step.org
+- email: employee2@step.org
+- username: employee_2
 - password: employee1234
 ```
