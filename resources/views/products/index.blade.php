@@ -56,7 +56,13 @@
                                     <td><strong>#{{ $product->product_id }}</strong></td>
                                     <td>{{ $product->product_name }}</td>
                                     <td><strong>${{ number_format($product->product_price, 2) }}</strong></td>
-                                    <td>{{ number_format($product->quantity) }}</td>
+                                    {{-- <td>{{ number_format($product->quantity) }}</td> --}}
+                                    <td>
+                                        <span
+                                            class="stock-badge @if($product->quantity == 0) out-of-stock @elseif($product->quantity <= 5) low-stock @endif">
+                                            {{ $product->quantity }}
+                                        </span>
+                                    </td>
                                     <td>{{ $product->category->name }}</td>
                                     <td>{{ $product->product_desc ? Str::limit($product->product_desc, 50) : 'N/A' }}</td>
                                     {{-- <td>{{ $product->created_at->format('M d, Y') }}</td> --}}
@@ -73,7 +79,7 @@
                                                 @method('DELETE')
                                                 <button type="button" class="action-btn delete"
                                                     onclick="showDeleteModal('{{ route('products.destroy', $product->product_id) }}', 
-                                                    'Are you sure you want to delete the product &quot;{{ $product->product_name }}&quot;? This action cannot be undone.')"
+                                                            'Are you sure you want to delete the product &quot;{{ $product->product_name }}&quot;? This action cannot be undone.')"
                                                     title="Delete">
                                                     <span class="material-symbols-rounded">delete</span>
                                                 </button>

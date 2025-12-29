@@ -97,7 +97,7 @@ class InvoiceController extends Controller
                 'status' => $validated['invoice_status'],
                 'user_id' => auth()->id(),
             ]);
-
+            
             // Create Customer
             Customer::create([
                 'invoice' => $validated['invoice_number'],
@@ -106,6 +106,20 @@ class InvoiceController extends Controller
                 'email' => $validated['customer_email'],
                 'address' => $validated['customer_address'],
             ]);
+            
+            // Check inventory availability
+            foreach ($validated['products'] as $productData) {
+                $product = Product::where('product_name', $productData['name'])->first();
+
+                if ($product) {
+                    if ($product->quantity < $productData['qty']) {
+                        DB::rollBack();
+                        return redirect()->back()
+                            ->withInput()
+                            ->with('error', "Insufficient stock for {$product->product_name}. Available: {$product->quantity}, Requested: {$productData['qty']}");
+                    }
+                }
+            }
 
             // Create Invoice Items
             foreach ($validated['products'] as $product) {
@@ -117,6 +131,11 @@ class InvoiceController extends Controller
                     'discount' => $product['discount'] ?? null,
                     'subtotal' => $product['subtotal'],
                 ]);
+                // Reduce product quantity
+                $product = Product::where('product_name', $productData['name'])->first();
+                if ($product) {
+                    $product->decrement('quantity', $productData['qty']);
+                }
             }
 
             DB::commit();
@@ -140,7 +159,8 @@ class InvoiceController extends Controller
     {
         $invoice = Invoice::with(['customer', 'items'])->where('id', $id)->firstOrFail();
         // $products = Product::all();
-        $products = Product::with('category')->get();;
+        $products = Product::with('category')->get();
+        ;
         $customers = StoreCustomer::all();
 
         return view('invoices.edit', compact('invoice', 'products', 'customers'));
@@ -184,6 +204,28 @@ class InvoiceController extends Controller
         DB::beginTransaction();
 
         try {
+            // Restore old inventory quantities
+            foreach ($invoice->items as $oldItem) {
+                $product = Product::where('product_name', $oldItem->product)->first();
+                if ($product) {
+                    $product->increment('quantity', $oldItem->qty);
+                }
+            }
+
+            // Check new inventory availability
+            foreach ($validated['products'] as $productData) {
+                $product = Product::where('product_name', $productData['name'])->first();
+
+                if ($product) {
+                    if ($product->quantity < $productData['qty']) {
+                        DB::rollBack();
+                        return redirect()->back()
+                            ->withInput()
+                            ->with('error', "Insufficient stock for {$product->product_name}. Available: {$product->quantity}, Requested: {$productData['qty']}");
+                    }
+                }
+            }
+
             // Update Invoice
             $invoice->update([
                 'invoice_date' => $validated['invoice_date'],
@@ -217,6 +259,11 @@ class InvoiceController extends Controller
                     'discount' => $product['discount'] ?? null,
                     'subtotal' => $product['subtotal'],
                 ]);
+                // Reduce product quantity
+                $product = Product::where('product_name', $productData['name'])->first();
+                if ($product) {
+                    $product->decrement('quantity', $productData['qty']);
+                }
             }
 
             DB::commit();
@@ -240,15 +287,33 @@ class InvoiceController extends Controller
     {
         $invoice = Invoice::findOrFail($id);
 
-        // Delete related records (cascade)
-        $invoice->customer()->delete();
-        $invoice->items()->delete();
-        $invoice->delete();
+        DB::beginTransaction();
 
-        // TODO: Delete PDF file if exists
+        try {
+            // Restore inventory before deleting
+            foreach ($invoice->items as $item) {
+                $product = Product::where('product_name', $item->product)->first();
+                if ($product) {
+                    $product->increment('quantity', $item->qty);
+                }
+            }
 
-        return redirect()->route('invoices.index')
-            ->with('success', 'Invoice has been deleted successfully!');
+            // Delete related records
+            $invoice->customer()->delete();
+            $invoice->items()->delete();
+            $invoice->delete();
+
+            DB::commit();
+
+            return redirect()->route('invoices.index')
+                ->with('success', 'Invoice has been deleted and inventory restored!');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return redirect()->back()
+                ->with('error', 'Failed to delete invoice: ' . $e->getMessage());
+        }
     }
 
     /**

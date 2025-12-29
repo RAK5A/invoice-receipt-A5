@@ -48,6 +48,19 @@
                         @enderror
                         <small class="form-hint">Lower numbers appear first in lists</small>
                     </div>
+                    
+                    <!-- Active Status -->
+                    <div class="form-group full-width">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="is_active" id="is_active" value="1" 
+                                {{ old('is_active', $category->is_active) ? 'checked' : '' }}>
+                            <span>
+                                <span class="material-symbols-rounded">check_circle</span>
+                                Active (visible in product selection)
+                            </span>
+                        </label>
+                        <small class="form-hint">Uncheck to temporarily hide this category without deleting it</small>
+                    </div>
 
                     <!-- Description (Full Width) -->
                     <div class="form-group full-width">
@@ -61,19 +74,6 @@
                         @error('description')
                             <span class="error-message">{{ $message }}</span>
                         @enderror
-                    </div>
-
-                    <!-- Active Status -->
-                    <div class="form-group full-width">
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="is_active" id="is_active" value="1" 
-                                {{ old('is_active', $category->is_active) ? 'checked' : '' }}>
-                            <span>
-                                <span class="material-symbols-rounded">check_circle</span>
-                                Active (visible in product selection)
-                            </span>
-                        </label>
-                        <small class="form-hint">Uncheck to temporarily hide this category without deleting it</small>
                     </div>
                 </div>
 

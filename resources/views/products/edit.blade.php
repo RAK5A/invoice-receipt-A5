@@ -53,21 +53,7 @@
                             <span class="error-message">{{ $message }}</span>
                         @enderror
                     </div>
-
-                    <!-- Product Description (Full Width) -->
-                    <div class="form-group full-width">
-                        <label for="product_desc">
-                            <span class="material-symbols-rounded">description</span>
-                            Product Description
-                        </label>
-                        <textarea id="product_desc" name="product_desc"
-                            class="form-control @error('product_desc') is-invalid @enderror" rows="4"
-                            placeholder="Enter product description">{{ old('product_desc', $product->product_desc) }}</textarea>
-                        @error('product_desc')
-                            <span class="error-message">{{ $message }}</span>
-                        @enderror
-                    </div>
-
+                    
                     <!-- Category Dropdown -->
                     <div class="form-group">
                         <label for="category_id">
@@ -88,13 +74,28 @@
                     <!-- Quantity Field -->
                     <div class="form-group">
                         <label for="quantity">
-                            <span class="material-symbols-rounded">shelf_position</span>
+                            <span class="material-symbols-rounded">inventory</span>
                             Quantity in Stock
                             <span class="required">*</span>
                         </label>
                         <input type="number" name="quantity" id="quantity" class="form-control" min="0" value="{{ old('quantity', $product->quantity) }}"
                             required>
                     </div>
+
+                    <!-- Product Description (Full Width) -->
+                    <div class="form-group full-width">
+                        <label for="product_desc">
+                            <span class="material-symbols-rounded">description</span>
+                            Product Description
+                        </label>
+                        <textarea id="product_desc" name="product_desc"
+                            class="form-control @error('product_desc') is-invalid @enderror" rows="4"
+                            placeholder="Enter product description">{{ old('product_desc', $product->product_desc) }}</textarea>
+                        @error('product_desc')
+                            <span class="error-message">{{ $message }}</span>
+                        @enderror
+                    </div>
+
                 </div>
 
                 <!-- Form Actions -->
