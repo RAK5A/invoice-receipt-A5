@@ -69,7 +69,8 @@
 }
 
 /* Invoice Items Table */
-.invoice-items-table {
+.invoice-items-table,
+.selected-products-table {
     overflow-x: auto;
     margin-top: 20px;
 }
@@ -175,6 +176,12 @@
     margin: 0;
 }
 
+.total-amount {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #151A2D;
+}
+
 .total-input,
 .total-input-editable {
     width: 150px;
@@ -211,12 +218,39 @@
     font-weight: 700;
 }
 
-.grand-total .total-input {
+.grand-total .total-input,
+.grand-total .total-amount {
     background: white;
     color: #3b82f6;
     font-size: 1.25rem;
     font-weight: 700;
     border: none;
+}
+
+/* Discount Input */
+.discount-input {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.discount-input input {
+    width: 100px;
+}
+
+.discount-input select {
+    width: 100px;
+}
+
+/* Tax Input */
+.tax-input {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.tax-input input {
+    width: 80px;
 }
 
 /* Customer Cell */
@@ -257,6 +291,35 @@
     color: #10b981;
 }
 
+/* Stock Badge */
+.stock-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    background: #d1fae5;
+    color: #10b981;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.stock-badge.low-stock {
+    background: #fef3c7;
+    color: #f59e0b;
+}
+
+.stock-badge.out-of-stock {
+    background: #fee2e2;
+    color: #ef4444;
+}
+
+/* Text Muted */
+.text-muted {
+    display: block;
+    color: #94a3b8;
+    font-size: 0.8rem;
+    margin-top: 4px;
+}
+
 /* Additional Action Buttons */
 .action-btn.view {
     background: #e0e7ff;
@@ -280,14 +343,14 @@
 
 /* Modal Styles */
 .modal {
-    display: none;
+    display: none; /* Hides modals by default to prevent popup on refresh */
     position: fixed;
     z-index: 1000;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.5);
     align-items: center;
     justify-content: center;
 }
@@ -301,6 +364,10 @@
     overflow: hidden;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
     animation: slideDown 0.3s ease;
+}
+
+.modal-content.large {
+    max-width: 900px;
 }
 
 @keyframes slideDown {
@@ -358,23 +425,8 @@
     overflow-y: auto;
 }
 
-/* .modal-body {
-    padding: 24px;
-    text-align: center;
-} */
-
-.modal-body p {
-    color: #64748b;
-    font-size: 1rem;
-    line-height: 1.6;
-    margin: 0;
-}
-
-.modal-footer {
-    padding: 16px 24px 24px;
-    display: flex;
-    gap: 12px;
-    justify-content: center;
+.modal-body .search-box {
+    margin-bottom: 20px;
 }
 
 /* Alert Info */
